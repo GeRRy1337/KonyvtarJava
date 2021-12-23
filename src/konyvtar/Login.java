@@ -19,7 +19,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     private void onLoggedIn(){
-        Main.GuiWindow.returnLogin();
+        Main.GuiWindow.returnLogin(true);
         this.dispose();
     }
     

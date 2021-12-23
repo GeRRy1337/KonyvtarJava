@@ -28,9 +28,17 @@ public class Gui extends Menu {
         return false;
     }
 
-    protected void returnLogin(){
+    protected void returnLogin(boolean newValue){
         this.setVisible(true);
+        user.setLogin(newValue);
     }
+    
+    @Override
+    public void logout(){
+        user.setLogin(false);
+        checkLogin();
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
