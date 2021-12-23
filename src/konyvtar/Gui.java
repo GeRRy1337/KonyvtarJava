@@ -24,6 +24,8 @@ public class Gui extends Menu {
             this.setVisible(false);
             loginWindow.setVisible(true);
             return true;
+        }else{
+            setDisplayName(user.getUsername());
         }
         return false;
     }
@@ -31,6 +33,8 @@ public class Gui extends Menu {
     protected void returnLogin(boolean newValue){
         this.setVisible(true);
         user.setLogin(newValue);
+        user.setId(1);
+        setDisplayName(user.getUsername());
     }
     
     @Override
@@ -55,7 +59,7 @@ public class Gui extends Menu {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 677, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
