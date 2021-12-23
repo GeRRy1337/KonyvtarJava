@@ -25,11 +25,11 @@ public class Login extends javax.swing.JFrame {
 
     private void onLoggedIn(){
         if(user.getText().equals("")){
-            JOptionPane.showMessageDialog(rootPane, "You did not enter a username!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Nem írtál be felhasználó nevet!","Error",JOptionPane.ERROR_MESSAGE);
             return;
         }
         if(String.valueOf(pass.getPassword()).equals("")){
-            JOptionPane.showMessageDialog(rootPane, "You did not enter a password!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Nem írtál be jelszót!","Error",JOptionPane.ERROR_MESSAGE);
             return;
         }
         dbConnect sql = new dbConnect();
@@ -41,15 +41,18 @@ public class Login extends javax.swing.JFrame {
             BigInteger bigInt = new BigInteger(1,digest);
             myHash = bigInt.toString(16);
         }catch(Exception e){System.err.println(e.getMessage());}
-        ResultSet result = sql.getResult("Select * from users Where username=\""+user.getText()+"\" and password=\""+myHash+"\"");
+        ResultSet result = sql.getResult("Select id from users Where username=\""+user.getText()+"\" and password=\""+myHash+"\"");
         try{
             while(result.next()){
-                Main.GuiWindow.returnLogin(true);
+                System.err.println("belépve");
+                Main.GuiWindow.returnLogin(result.getInt("id"));
                 this.dispose();
+                return;
             }
+            JOptionPane.showMessageDialog(rootPane, "Nem létezik ilyen felhasználó ezzel a jelszóval!","Error",JOptionPane.ERROR_MESSAGE);
         }catch(Exception e){
             System.err.println(e.getMessage());
-            JOptionPane.showMessageDialog(rootPane, "SQL error try again later!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Error",JOptionPane.ERROR_MESSAGE);
         }
     }
     

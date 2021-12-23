@@ -30,10 +30,10 @@ public class Gui extends Menu {
         return false;
     }
 
-    protected void returnLogin(boolean newValue){
+    protected void returnLogin(int id){
         this.setVisible(true);
-        user.setLogin(newValue);
-        user.setId(1);
+        user.setLogin(true);
+        user.setId(id);
         setDisplayName(user.getUsername());
     }
     
