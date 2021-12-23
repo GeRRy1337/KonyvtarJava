@@ -12,21 +12,25 @@ package konyvtar;
  */
 public class Gui extends Menu {
     /** Creates new form Gui */
-    private User user;
+    private User user=new User();
+    protected Login loginWindow=new Login();
     
     public Gui() {
         initComponents();
-        checkLogin();
     }
     
-    private boolean checkLogin(){
+    public boolean checkLogin(){
         if(!user.loginValue()){
-            
-            return false;
+            this.setVisible(false);
+            loginWindow.setVisible(true);
+            return true;
         }
-        return true;
+        return false;
     }
 
+    protected void returnLogin(){
+        this.setVisible(true);
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -37,6 +41,7 @@ public class Gui extends Menu {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Main");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
