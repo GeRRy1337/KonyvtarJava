@@ -5,6 +5,11 @@
  */
 package konyvtar;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Gergő
@@ -19,8 +24,33 @@ public class Login extends javax.swing.JFrame {
     }
 
     private void onLoggedIn(){
-        Main.GuiWindow.returnLogin(true);
-        this.dispose();
+        if(user.getText().equals("")){
+            JOptionPane.showMessageDialog(rootPane, "You did not enter a username!","Error",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(String.valueOf(pass.getPassword()).equals("")){
+            JOptionPane.showMessageDialog(rootPane, "You did not enter a password!","Error",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        dbConnect sql = new dbConnect();
+        String myHash="";
+        try{
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(String.valueOf(pass.getPassword()).getBytes());
+            byte[] digest = md.digest();
+            BigInteger bigInt = new BigInteger(1,digest);
+            myHash = bigInt.toString(16);
+        }catch(Exception e){System.err.println(e.getMessage());}
+        ResultSet result = sql.getResult("Select * from users Where username=\""+user.getText()+"\" and password=\""+myHash+"\"");
+        try{
+            while(result.next()){
+                Main.GuiWindow.returnLogin(true);
+                this.dispose();
+            }
+        }catch(Exception e){
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(rootPane, "SQL error try again later!","Error",JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     /**
@@ -32,16 +62,16 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jTextField1 = new javax.swing.JTextField();
+        pass = new javax.swing.JPasswordField();
+        user = new javax.swing.JTextField();
         submit = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
 
-        jPasswordField1.setText("jPasswordField1");
+        pass.setText("jelszó");
 
-        jTextField1.setText("jTextField1");
+        user.setText("Felhasználónév");
 
         submit.setText("Belépés");
         submit.addActionListener(new java.awt.event.ActionListener() {
@@ -57,18 +87,18 @@ public class Login extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(133, 133, 133)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPasswordField1)
-                    .addComponent(jTextField1)
+                    .addComponent(pass)
+                    .addComponent(user)
                     .addComponent(submit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(155, Short.MAX_VALUE))
+                .addContainerGap(186, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(107, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addComponent(submit)
                 .addGap(82, 82, 82))
@@ -117,8 +147,8 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPasswordField pass;
     private javax.swing.JButton submit;
+    private javax.swing.JTextField user;
     // End of variables declaration//GEN-END:variables
 }
