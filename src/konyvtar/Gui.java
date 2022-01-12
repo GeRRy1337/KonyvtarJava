@@ -84,7 +84,7 @@ public class Gui extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        bookISBNnew = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         scannerISBNupload = new javax.swing.JToggleButton();
 
@@ -164,6 +164,12 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        scannerISBNborrow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scannerISBNborrowActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout borrowLayout = new javax.swing.GroupLayout(borrow);
         borrow.setLayout(borrowLayout);
         borrowLayout.setHorizontalGroup(
@@ -218,9 +224,15 @@ public class Gui extends javax.swing.JFrame {
 
         jTextField2.setText("jTextField2");
 
-        jTextField3.setText("jTextField3");
+        bookISBNnew.setText("jTextField3");
 
         jButton2.setText("Küldés");
+
+        scannerISBNupload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                scannerISBNuploadActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout uploadBookLayout = new javax.swing.GroupLayout(uploadBook);
         uploadBook.setLayout(uploadBookLayout);
@@ -236,7 +248,7 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(jLabel3))
                         .addGap(18, 18, 18)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                            .addComponent(bookISBNnew, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
                             .addComponent(jTextField2)
                             .addComponent(jTextField1))
                         .addGap(18, 18, 18)
@@ -260,7 +272,7 @@ public class Gui extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bookISBNnew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(scannerISBNupload, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
                 .addComponent(jButton2)
@@ -320,8 +332,34 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_newBookButtonActionPerformed
 
     private void scannerCardBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerCardBorrowActionPerformed
-       
+        sc=new Scanner(System.in);
+        if(scannerCardBorrow.isSelected()){
+            CardNumber.setText(sc.nextLine());
+            scannerCardBorrow.setSelected(false);
+        }else{
+            sc.close();
+        }
     }//GEN-LAST:event_scannerCardBorrowActionPerformed
+
+    private void scannerISBNborrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerISBNborrowActionPerformed
+        sc=new Scanner(System.in);
+        if(scannerISBNborrow.isSelected()){
+            bookISBN.setText(sc.nextLine());
+            scannerISBNborrow.setSelected(false);
+        }else{
+            sc.close();
+        }
+    }//GEN-LAST:event_scannerISBNborrowActionPerformed
+
+    private void scannerISBNuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerISBNuploadActionPerformed
+        sc=new Scanner(System.in);
+        if(scannerISBNupload.isSelected()){
+            bookISBNnew.setText(sc.nextLine());
+            scannerISBNupload.setSelected(false);
+        }else{
+            sc.close();
+        }
+    }//GEN-LAST:event_scannerISBNuploadActionPerformed
 
     /**
      * @param args the command line arguments
@@ -363,6 +401,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JPanel MenuPanel;
     private javax.swing.JButton UpBorrow;
     private javax.swing.JTextField bookISBN;
+    private javax.swing.JTextField bookISBNnew;
     private javax.swing.JPanel borrow;
     private javax.swing.JButton borrowButton;
     private javax.swing.JLabel displayName;
@@ -376,7 +415,6 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JLayeredPane mainPanel;
     private javax.swing.JButton newBookButton;
     private javax.swing.JToggleButton scannerCardBorrow;

@@ -233,6 +233,9 @@
               </Events>
             </Component>
             <Component class="javax.swing.JToggleButton" name="scannerISBNborrow">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="scannerISBNborrowActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -252,7 +255,7 @@
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="jTextField3" pref="116" max="32767" attributes="0"/>
+                                  <Component id="bookISBNnew" pref="116" max="32767" attributes="0"/>
                                   <Component id="jTextField2" max="32767" attributes="0"/>
                                   <Component id="jTextField1" max="32767" attributes="0"/>
                               </Group>
@@ -284,7 +287,7 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jTextField3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="bookISBNnew" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="scannerISBNupload" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="79" max="32767" attributes="0"/>
@@ -320,7 +323,7 @@
                 <Property name="text" type="java.lang.String" value="jTextField2"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="jTextField3">
+            <Component class="javax.swing.JTextField" name="bookISBNnew">
               <Properties>
                 <Property name="text" type="java.lang.String" value="jTextField3"/>
               </Properties>
@@ -331,6 +334,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JToggleButton" name="scannerISBNupload">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="scannerISBNuploadActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
