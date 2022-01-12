@@ -379,6 +379,12 @@ public class Gui extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!","Error",JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            result = db.getResult("Select id from borrow where ISBN=\""+bookISBN.getText()+"\" and state=1");
+            if(result.next()){
+                JOptionPane.showMessageDialog(rootPane, "Hiba ezt a könyvet nem hozták vissza határidőre!","Error",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
         }catch(Exception e){
             System.err.println(e.getMessage());
             JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Error",JOptionPane.ERROR_MESSAGE);
