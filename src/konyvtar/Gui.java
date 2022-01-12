@@ -6,7 +6,9 @@
 
 package konyvtar;
 
-import java.util.Scanner;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -16,7 +18,6 @@ public class Gui extends javax.swing.JFrame {
     /** Creates new form Gui */
     private User user=new User();
     protected Login loginWindow=new Login();
-    private Scanner sc;
     
     public Gui() {
         initComponents();
@@ -157,6 +158,11 @@ public class Gui extends javax.swing.JFrame {
         bookISBN.setText("könyv isbn");
 
         UpBorrow.setText("Küldés");
+        UpBorrow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UpBorrowActionPerformed(evt);
+            }
+        });
 
         scannerCardBorrow.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -332,34 +338,53 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_newBookButtonActionPerformed
 
     private void scannerCardBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerCardBorrowActionPerformed
-        sc=new Scanner(System.in);
         if(scannerCardBorrow.isSelected()){
-            CardNumber.setText(sc.nextLine());
+            CardNumber.setText(JOptionPane.showInputDialog(""));
             scannerCardBorrow.setSelected(false);
-        }else{
-            sc.close();
         }
     }//GEN-LAST:event_scannerCardBorrowActionPerformed
 
     private void scannerISBNborrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerISBNborrowActionPerformed
-        sc=new Scanner(System.in);
         if(scannerISBNborrow.isSelected()){
-            bookISBN.setText(sc.nextLine());
+            bookISBN.setText(JOptionPane.showInputDialog(""));
             scannerISBNborrow.setSelected(false);
-        }else{
-            sc.close();
         }
     }//GEN-LAST:event_scannerISBNborrowActionPerformed
 
     private void scannerISBNuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerISBNuploadActionPerformed
-        sc=new Scanner(System.in);
         if(scannerISBNupload.isSelected()){
-            bookISBNnew.setText(sc.nextLine());
+            bookISBNnew.setText(JOptionPane.showInputDialog(""));
             scannerISBNupload.setSelected(false);
-        }else{
-            sc.close();
         }
     }//GEN-LAST:event_scannerISBNuploadActionPerformed
+
+    private void UpBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpBorrowActionPerformed
+        if(CardNumber.getText().equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártya számot!","Error",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(bookISBN.getText().equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!","Error",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        dbConnect db=new dbConnect();
+        ResultSet result = db.getResult("Select id from cards Where id=\""+CardNumber.getText()+"\"");
+        try{
+            if(!result.next()){
+                JOptionPane.showMessageDialog(rootPane, "Hibás kártyaszám!","Error",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            result = db.getResult("Select id from books Where ISBN=\""+bookISBN.getText()+"\"");
+            if(!result.next()){
+                JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!","Error",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }catch(Exception e){
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Error",JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_UpBorrowActionPerformed
 
     /**
      * @param args the command line arguments

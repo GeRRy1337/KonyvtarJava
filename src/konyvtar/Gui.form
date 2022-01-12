@@ -226,6 +226,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="K&#xfc;ld&#xe9;s"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="UpBorrowActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JToggleButton" name="scannerCardBorrow">
               <Events>
