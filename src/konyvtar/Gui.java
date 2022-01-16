@@ -78,7 +78,7 @@ public class Gui extends javax.swing.JFrame {
                 }
             }catch(Exception e){
                 System.err.println(e.getMessage());
-                JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Error",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Hiba",JOptionPane.ERROR_MESSAGE);
             }
         }else{
             uploadBookTitle.setText("");
@@ -590,32 +590,33 @@ public class Gui extends javax.swing.JFrame {
 
     private void UpBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpBorrowActionPerformed
         if(CardNumber.getText().equals("")){
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártya számot!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártya számot!","Hiba",JOptionPane.ERROR_MESSAGE);
             return;
         }
         if(borrowStockNum.getText().equals("")){
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!","Hiba",JOptionPane.ERROR_MESSAGE);
             return;
         }
         if(borrowDate.getDate()==null){
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál visszahozási dátumot!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál visszahozási dátumot!","Hiba",JOptionPane.ERROR_MESSAGE);
             return;
         }
         dbConnect db=new dbConnect();
         ResultSet result = db.getResult("Select id from cards Where id=\""+CardNumber.getText()+"\"");
         try{
             if(!result.next()){
-                JOptionPane.showMessageDialog(rootPane, "Hibás kártyaszám!","Error",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "Hibás kártyaszám!","Hiba",JOptionPane.ERROR_MESSAGE);
                 return;
             }
             result = db.getResult("Select stockNum from stock Where stockNum=\""+borrowStockNum.getText()+"\"");
             if(!result.next()){
-                JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!","Error",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!","Hiba",JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            result = db.getResult("Select id from borrow where stockNum=\""+borrowStockNum.getText()+"\" and state=0");
+            result = db.getResult("Select id,cardNum,stockNum,date from borrow where stockNum=\""+borrowStockNum.getText()+"\" and state=0");
             if(result.next()){
-                JOptionPane.showMessageDialog(rootPane, "Hiba ezt a könyvet nem hozták vissza határidőre!","Error",JOptionPane.ERROR_MESSAGE);
+                String errorString=String.format("Kártyaszám:%s, Könyv azonosító:%s, Határidő:%s",result.getString("cardNum"),result.getString("stockNum"),result.getString("date"));
+                JOptionPane.showMessageDialog(rootPane, "Ez a könyv ki van kölcsönözve: "+errorString,"Hiba",JOptionPane.ERROR_MESSAGE);
                 return;
             }
             SimpleDateFormat sd=new SimpleDateFormat("yyyy-MM-dd");
@@ -630,7 +631,7 @@ public class Gui extends javax.swing.JFrame {
             
         }catch(Exception e){
             System.err.println(e.getMessage());
-            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Hiba",JOptionPane.ERROR_MESSAGE);
         }
         
     }//GEN-LAST:event_UpBorrowActionPerformed
@@ -655,11 +656,11 @@ public class Gui extends javax.swing.JFrame {
 
     private void uploadBookSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadBookSubmitActionPerformed
         if(uploadBookISBN.getText().equals("")){
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg ISBN számot!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg ISBN számot!","Hiba",JOptionPane.ERROR_MESSAGE);
             return;
         }
         if(uploadBookStockNum.getText().equals("")){
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!","Hiba",JOptionPane.ERROR_MESSAGE);
             return;
         }
         dbConnect db=new dbConnect();
@@ -676,7 +677,7 @@ public class Gui extends javax.swing.JFrame {
             }
        }catch(Exception e){
            System.err.println(e.getMessage());
-           JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Error",JOptionPane.ERROR_MESSAGE);
+           JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Hiba",JOptionPane.ERROR_MESSAGE);
        }
         
         
@@ -692,7 +693,7 @@ public class Gui extends javax.swing.JFrame {
 
     private void borrowBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrowBackButtonActionPerformed
         if(borrowStockNumBack.getText().equals("")){
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!","Hiba",JOptionPane.ERROR_MESSAGE);
             return;
         }
         dbConnect db=new dbConnect();
