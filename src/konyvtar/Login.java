@@ -44,10 +44,18 @@ public class Login extends javax.swing.JFrame {
         ResultSet result = sql.getResult("Select id from users Where username=\""+user.getText()+"\" and password=\""+myHash+"\"");
         try{
             while(result.next()){
-                System.err.println("belépve");
-                Main.GuiWindow.returnLogin(result.getInt("id"));
-                this.dispose();
-                return;
+                if (sql.getResult("Select id from users Where id="+result.getInt("id")+" and id in (select id from admins)").next()){
+                    System.err.println("belépve");
+                    Main.GuiWindow.returnLogin(result.getInt("id"));
+                    user.setText("");
+                    pass.setText("");
+                    this.dispose();
+                    return;
+                }else{
+                    JOptionPane.showMessageDialog(rootPane, "Nincs megfelelő jogosultságod!","Error",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                
             }
             JOptionPane.showMessageDialog(rootPane, "Nem létezik ilyen felhasználó ezzel a jelszóval!","Error",JOptionPane.ERROR_MESSAGE);
         }catch(Exception e){
