@@ -22,10 +22,16 @@ public class dbConnect {
         }
         return null;
     }
-    
+    /**
+     * 
+     * @param table
+     *  "name(rownames)" example: "users(username,password)" <br>
+     * @param value
+     *  "Values(values)" example: "VALUES ('username','password')" <br>
+     * @return boolean value if succesful then true else false
+     */
     public boolean insertToSql(String table,String value){
-        //table: "name(rownames)" example: "users(username,password)"
-        //value: "Values(values)" example: "VALUES ('username','password')"
+        
         if(table.equals("") || value.equals("")){
             return false;
         }
@@ -39,11 +45,16 @@ public class dbConnect {
         }
         return false;
     }
-    
+    /**
+     * @param table
+     *  "name (+ join)" example: "table (inner join table2 on table.record = table2.record ... etc)" <br>
+     * @param record
+     *  "record=new value" example: "record1=value1, record2=value2" <br>
+     * @param statement
+     *  "Where ..." <br>
+     * @return boolean value if succesful then true else false
+    */
     public boolean updateSql(String table,String record,String statement){
-        //table: "name (+ join)" example: "table (inner join table2 on table.record = table2.record ... etc)"
-        //record: "record=new value" example: "record1=value1, record2=value2"
-        //statement: "Where ..."
         if(table.equals("") || record.equals("")){
             return false;
         }
