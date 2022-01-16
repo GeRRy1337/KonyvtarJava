@@ -16,7 +16,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class Gui extends javax.swing.JFrame {
     /** Creates new form Gui */
-    private User user=new User();
+    private final User user=new User();
     protected Login loginWindow=new Login();
     private JFileChooser chooseImage;
     
@@ -691,7 +691,7 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_scannerStockNumBorrowBackActionPerformed
 
     private void borrowBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrowBackButtonActionPerformed
-        if(borrowStockNumBack.equals("")){
+        if(borrowStockNumBack.getText().equals("")){
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!","Error",JOptionPane.ERROR_MESSAGE);
             return;
         }
