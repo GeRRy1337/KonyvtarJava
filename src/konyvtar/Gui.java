@@ -580,6 +580,31 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_fileChooserButtonNewActionPerformed
 
     private void uploadBookSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadBookSubmitActionPerformed
+        if(uploadBookISBN.getText().equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg ISBN számot!","Error",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(uploadBookStockNum.getText().equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!","Error",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        dbConnect db=new dbConnect();
+        ResultSet result = db.getResult("Select * from books Where ISBN='"+uploadBookISBN.getText()+"'");
+        try{
+            if(result.next()){
+                ResultSet bookId = db.getResult("Select id from books Where ISBN="+uploadBookISBN.getText());
+                if(bookId.next())
+                    if (db.insertToSql("stock(bookId,stockNum)", String.format("VALUES(%s,%s)",bookId.getString("id"),uploadBookStockNum.getText())))
+                        JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!","Info",JOptionPane.INFORMATION_MESSAGE);   
+                    
+            }else{
+
+            }
+       }catch(Exception e){
+           System.err.println(e.getMessage());
+           JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Error",JOptionPane.ERROR_MESSAGE);
+       }
+        
         
     }//GEN-LAST:event_uploadBookSubmitActionPerformed
 
