@@ -40,6 +40,24 @@ public class dbConnect {
         return false;
     }
     
+    public boolean updateSql(String table,String record,String statement){
+        //table: "name (+ join)" example: "table (inner join table2 on table.record = table2.record ... etc)"
+        //record: "record=new value" example: "record1=value1, record2=value2"
+        //statement: "Where ..."
+        if(table.equals("") || record.equals("")){
+            return false;
+        }
+        try{
+            Statement myStmt=this.myConn.createStatement();
+            myStmt.executeUpdate("Upate "+table +"Set " +record+" "+statement);
+            return true;
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+        }
+        return false;
+    }
+    
     public boolean deleteFromSql(String statement){
         try{
             String query = "Delete From "+statement; 
