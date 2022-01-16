@@ -6,10 +6,13 @@
 
 package konyvtar;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 
@@ -21,6 +24,7 @@ public class Gui extends javax.swing.JFrame {
     /** Creates new form Gui */
     private User user=new User();
     protected Login loginWindow=new Login();
+    private JFileChooser chooseImage;
     
     public Gui() {
         initComponents();
@@ -101,6 +105,11 @@ public class Gui extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        fileChooserButtonNew = new javax.swing.JButton();
+        fileChooserStringNew = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Main");
@@ -139,14 +148,14 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(MenuPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                .addGap(180, 180, 180)
+                .addComponent(borrowButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(borrowButton, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(newBookButton, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                .addComponent(newBookButton, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4)
                 .addGap(20, 20, 20))
         );
         MenuPanelLayout.setVerticalGroup(
@@ -222,7 +231,7 @@ public class Gui extends javax.swing.JFrame {
                         .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(scannerCardBorrow)
                             .addComponent(scannerISBNborrow))))
-                .addContainerGap(384, Short.MAX_VALUE))
+                .addContainerGap(385, Short.MAX_VALUE))
         );
         borrowLayout.setVerticalGroup(
             borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -241,7 +250,7 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
                     .addComponent(borrowDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
                 .addComponent(UpBorrow)
                 .addContainerGap())
         );
@@ -288,6 +297,19 @@ public class Gui extends javax.swing.JFrame {
         jLabel10.setText("Új könyv adatai");
         jLabel10.setToolTipText("Megadásuk csak akkor kötelező ha a könyv nem szerepel még az adatbázisban");
 
+        jLabel11.setText("Kiadó:");
+
+        jTextField3.setText("jTextField2");
+
+        jLabel12.setText("Kép:");
+
+        fileChooserButtonNew.setText("Tallózás");
+        fileChooserButtonNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fileChooserButtonNewActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout uploadBookLayout = new javax.swing.GroupLayout(uploadBook);
         uploadBook.setLayout(uploadBookLayout);
         uploadBookLayout.setHorizontalGroup(
@@ -320,23 +342,29 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(uploadBookLayout.createSequentialGroup()
                         .addGap(133, 133, 133)
-                        .addComponent(jLabel10))
+                        .addComponent(jLabel10)
+                        .addContainerGap(163, Short.MAX_VALUE))
                     .addGroup(uploadBookLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(uploadBookLayout.createSequentialGroup()
-                                .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel3))
-                                .addGap(18, 18, 18)
+                                .addGap(1, 1, 1)
                                 .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField2)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(uploadBookLayout.createSequentialGroup()
-                                .addComponent(jLabel8)
-                                .addGap(18, 18, 18)
-                                .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(155, Short.MAX_VALUE))
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                                    .addComponent(jTextField2)))
+                            .addComponent(jTextField3)
+                            .addComponent(jYearChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(fileChooserStringNew))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(fileChooserButtonNew)
+                        .addGap(19, 19, 19))))
         );
         uploadBookLayout.setVerticalGroup(
             uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -359,19 +387,30 @@ public class Gui extends javax.swing.JFrame {
                         .addComponent(jButton2))
                     .addGroup(uploadBookLayout.createSequentialGroup()
                         .addComponent(jLabel10)
-                        .addGap(45, 45, 45)
-                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(42, 42, 42)
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(uploadBookLayout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel11))
+                            .addGroup(uploadBookLayout.createSequentialGroup()
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel8)
                             .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 127, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(fileChooserButtonNew)
+                            .addComponent(fileChooserStringNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 74, Short.MAX_VALUE)))
                 .addContainerGap())
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
@@ -500,6 +539,20 @@ public class Gui extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_scannerStockNumUploadActionPerformed
 
+    private void fileChooserButtonNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooserButtonNewActionPerformed
+        chooseImage = new JFileChooser();
+        chooseImage.setMultiSelectionEnabled(false);
+        chooseImage.setCurrentDirectory(new File("C:\\tmp"));
+        chooseImage.setAcceptAllFileFilterUsed(false);
+        chooseImage.addChoosableFileFilter(new FileNameExtensionFilter("Image Files (.png, .jpg, .tif)", "jpg", "png", "tif"));
+        int retVal = chooseImage.showOpenDialog(rootPane);
+        if (retVal == JFileChooser.APPROVE_OPTION) {
+            File selectedfiles = chooseImage.getSelectedFile();
+            fileChooserStringNew.setText(selectedfiles.getName());
+        }
+        
+    }//GEN-LAST:event_fileChooserButtonNewActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -546,11 +599,15 @@ public class Gui extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser borrowDate;
     private javax.swing.JTextField borrowStockNum;
     private javax.swing.JLabel displayName;
+    private javax.swing.JButton fileChooserButtonNew;
+    private javax.swing.JTextField fileChooserStringNew;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -562,6 +619,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     private com.toedter.calendar.JYearChooser jYearChooser1;
     private javax.swing.JLayeredPane mainPanel;
     private javax.swing.JButton newBookButton;
