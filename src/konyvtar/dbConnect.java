@@ -60,7 +60,7 @@ public class dbConnect {
         }
         try{
             Statement myStmt=this.myConn.createStatement();
-            myStmt.executeUpdate("Upate "+table +"Set " +record+" "+statement);
+            myStmt.executeUpdate("Update "+table +"Set " +record+" "+statement);
             return true;
         }
         catch(Exception e){
