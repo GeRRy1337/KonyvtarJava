@@ -696,7 +696,8 @@ public class Gui extends javax.swing.JFrame {
             return;
         }
         dbConnect db=new dbConnect();
-        if(db.updateSql("borrow", "state=1", "where stockNum="+borrowStockNumBack.getText()+" and state=0")){
+        SimpleDateFormat sd=new SimpleDateFormat("yyyy-MM-dd");
+        if(db.updateSql("borrow", "state=1, returnDate='"+sd.format(System.currentTimeMillis())+"'", "where stockNum="+borrowStockNumBack.getText()+" and state=0")){
             JOptionPane.showMessageDialog(rootPane, "Sikeres könyv leadás!","Info",JOptionPane.INFORMATION_MESSAGE);
             borrowStockNumBack.setText("");
         }
