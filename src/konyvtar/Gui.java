@@ -7,7 +7,10 @@
 package konyvtar;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JOptionPane;
+
 
 
 /**
@@ -75,10 +78,12 @@ public class Gui extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         CardNumber = new javax.swing.JTextField();
-        bookISBN = new javax.swing.JTextField();
+        borrowStockNum = new javax.swing.JTextField();
         UpBorrow = new javax.swing.JButton();
         scannerCardBorrow = new javax.swing.JToggleButton();
         scannerISBNborrow = new javax.swing.JToggleButton();
+        jLabel6 = new javax.swing.JLabel();
+        borrowDate = new com.toedter.calendar.JDateChooser();
         uploadBook = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -155,7 +160,7 @@ public class Gui extends javax.swing.JFrame {
 
         CardNumber.setText("kártyaszám");
 
-        bookISBN.setText("könyv isbn");
+        borrowStockNum.setText("könyvtári szám");
 
         UpBorrow.setText("Küldés");
         UpBorrow.addActionListener(new java.awt.event.ActionListener() {
@@ -176,6 +181,10 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        jLabel6.setText("Visszahozás Dátuma:");
+
+        borrowDate.setMinSelectableDate(new Date(System.currentTimeMillis()));
+
         javax.swing.GroupLayout borrowLayout = new javax.swing.GroupLayout(borrow);
         borrow.setLayout(borrowLayout);
         borrowLayout.setHorizontalGroup(
@@ -183,24 +192,29 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(borrowLayout.createSequentialGroup()
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(borrowLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(UpBorrow))
+                    .addGroup(borrowLayout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(borrowLayout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(bookISBN))
-                            .addGroup(borrowLayout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(CardNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(borrowDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(borrowLayout.createSequentialGroup()
+                                    .addComponent(jLabel2)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(borrowStockNum))
+                                .addGroup(borrowLayout.createSequentialGroup()
+                                    .addComponent(jLabel1)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(CardNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(18, 18, 18)
                         .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(scannerCardBorrow)
-                            .addComponent(scannerISBNborrow)))
-                    .addGroup(borrowLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(UpBorrow)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(scannerISBNborrow))))
+                .addContainerGap(384, Short.MAX_VALUE))
         );
         borrowLayout.setVerticalGroup(
             borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,9 +227,13 @@ public class Gui extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(bookISBN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(borrowStockNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(scannerISBNborrow, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(borrowDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
                 .addComponent(UpBorrow)
                 .addContainerGap())
         );
@@ -346,7 +364,7 @@ public class Gui extends javax.swing.JFrame {
 
     private void scannerISBNborrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerISBNborrowActionPerformed
         if(scannerISBNborrow.isSelected()){
-            bookISBN.setText(JOptionPane.showInputDialog(""));
+            borrowStockNum.setText(JOptionPane.showInputDialog(""));
             scannerISBNborrow.setSelected(false);
         }
     }//GEN-LAST:event_scannerISBNborrowActionPerformed
@@ -363,8 +381,12 @@ public class Gui extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártya számot!","Error",JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(bookISBN.getText().equals("")){
+        if(borrowStockNum.getText().equals("")){
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!","Error",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(borrowDate.getDate()==null){
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál visszahozási dátumot!","Error",JOptionPane.ERROR_MESSAGE);
             return;
         }
         dbConnect db=new dbConnect();
@@ -374,16 +396,25 @@ public class Gui extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(rootPane, "Hibás kártyaszám!","Error",JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            result = db.getResult("Select id from books Where ISBN=\""+bookISBN.getText()+"\"");
+            result = db.getResult("Select stockNum from stock Where stockNum=\""+borrowStockNum.getText()+"\"");
             if(!result.next()){
                 JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!","Error",JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            result = db.getResult("Select id from borrow where ISBN=\""+bookISBN.getText()+"\" and state=1");
+            result = db.getResult("Select id from borrow where stockNum=\""+borrowStockNum.getText()+"\" and state=0");
             if(result.next()){
                 JOptionPane.showMessageDialog(rootPane, "Hiba ezt a könyvet nem hozták vissza határidőre!","Error",JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            SimpleDateFormat sd=new SimpleDateFormat("yyyy-MM-dd");
+            
+            if (db.insertToSql("borrow(cardNum,stockNum,date,state)", String.format("VALUES( %s,%s,'%s',0 )",CardNumber.getText(),borrowStockNum.getText(),String.valueOf(sd.format(borrowDate.getDate()))))){
+                JOptionPane.showMessageDialog(rootPane, "Sikeres kölcsönzés!","Info",JOptionPane.INFORMATION_MESSAGE);
+                CardNumber.setText("kártyaszám");
+                borrowStockNum.setText("könyvtári szám");
+                borrowDate.setDate(null);
+            }
+            
             
         }catch(Exception e){
             System.err.println(e.getMessage());
@@ -431,10 +462,11 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JTextField CardNumber;
     private javax.swing.JPanel MenuPanel;
     private javax.swing.JButton UpBorrow;
-    private javax.swing.JTextField bookISBN;
     private javax.swing.JTextField bookISBNnew;
     private javax.swing.JPanel borrow;
     private javax.swing.JButton borrowButton;
+    private com.toedter.calendar.JDateChooser borrowDate;
+    private javax.swing.JTextField borrowStockNum;
     private javax.swing.JLabel displayName;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -444,6 +476,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JLayeredPane mainPanel;
