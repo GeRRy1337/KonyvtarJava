@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package konyvtar;
 
 import java.io.File;
@@ -62,6 +56,38 @@ public class Gui extends javax.swing.JFrame {
         mainPanel.add(panel);
     }
     
+    private void updateBookISBN(){
+        if(!uploadBookISBN.getText().equals("")){
+            dbConnect db=new dbConnect();
+            ResultSet result = db.getResult("Select * from books Where ISBN='"+uploadBookISBN.getText()+"'");
+             try{
+                if(result.next()){
+                    uploadBookTitle.setText(result.getString("BookTitle"));
+                    uploadBookPublisher.setText(result.getString("Publisher"));
+                    uploadBookYear.setValue(result.getInt("YearOfPublication"));
+                    ResultSet author = db.getResult("Select name from author Where id='"+result.getInt("AuthorId")+"'");
+                    if(author.next())
+                        uploadBookAuthor.setText(author.getString("name"));
+                    else
+                        uploadBookAuthor.setText("Ismeretlen");
+                }else{
+                    uploadBookTitle.setText("");
+                    uploadBookPublisher.setText("");
+                    uploadBookYear.setValue(0);
+                    uploadBookAuthor.setText("");
+                }
+            }catch(Exception e){
+                System.err.println(e.getMessage());
+                JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Error",JOptionPane.ERROR_MESSAGE);
+            }
+        }else{
+            uploadBookTitle.setText("");
+            uploadBookPublisher.setText("");
+            uploadBookYear.setValue(0);
+            uploadBookAuthor.setText("");
+        }
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -92,21 +118,21 @@ public class Gui extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        bookISBNnew = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        uploadBookAuthor = new javax.swing.JTextField();
+        uploadBookTitle = new javax.swing.JTextField();
+        uploadBookISBN = new javax.swing.JTextField();
+        uploadBookSubmit = new javax.swing.JButton();
         scannerISBNupload = new javax.swing.JToggleButton();
-        bookStockNumNew = new javax.swing.JTextField();
+        uploadBookStockNum = new javax.swing.JTextField();
         scannerStockNumUpload = new javax.swing.JToggleButton();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jYearChooser1 = new com.toedter.calendar.JYearChooser();
+        uploadBookYear = new com.toedter.calendar.JYearChooser();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        uploadBookPublisher = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         fileChooserButtonNew = new javax.swing.JButton();
         fileChooserStringNew = new javax.swing.JTextField();
@@ -261,21 +287,24 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel5.setText("ISBN");
 
-        jTextField1.setText("jTextField1");
+        uploadBookISBN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                uploadBookISBNKeyReleased(evt);
+            }
+        });
 
-        jTextField2.setText("jTextField2");
-
-        bookISBNnew.setText("jTextField3");
-
-        jButton2.setText("Küldés");
+        uploadBookSubmit.setText("Küldés");
+        uploadBookSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uploadBookSubmitActionPerformed(evt);
+            }
+        });
 
         scannerISBNupload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 scannerISBNuploadActionPerformed(evt);
             }
         });
-
-        bookStockNumNew.setText("jTextField3");
 
         scannerStockNumUpload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -299,8 +328,6 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel11.setText("Kiadó:");
 
-        jTextField3.setText("jTextField2");
-
         jLabel12.setText("Kép:");
 
         fileChooserButtonNew.setText("Tallózás");
@@ -318,7 +345,7 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(uploadBookLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jButton2))
+                        .addComponent(uploadBookSubmit))
                     .addGroup(uploadBookLayout.createSequentialGroup()
                         .addGap(126, 126, 126)
                         .addComponent(jLabel9))
@@ -330,11 +357,11 @@ public class Gui extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(uploadBookLayout.createSequentialGroup()
-                                .addComponent(bookStockNumNew)
+                                .addComponent(uploadBookStockNum)
                                 .addGap(18, 18, 18)
                                 .addComponent(scannerStockNumUpload))
                             .addGroup(uploadBookLayout.createSequentialGroup()
-                                .addComponent(bookISBNnew, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(uploadBookISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(scannerISBNupload)))))
                 .addGap(70, 70, 70)
@@ -343,24 +370,24 @@ public class Gui extends javax.swing.JFrame {
                     .addGroup(uploadBookLayout.createSequentialGroup()
                         .addGap(133, 133, 133)
                         .addComponent(jLabel10)
-                        .addContainerGap(163, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(uploadBookLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8)
                             .addComponent(jLabel4)
                             .addComponent(jLabel3)
                             .addComponent(jLabel11)
-                            .addComponent(jLabel12))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel8))
+                        .addGap(16, 16, 16)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(uploadBookLayout.createSequentialGroup()
                                 .addGap(1, 1, 1)
                                 .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
-                                    .addComponent(jTextField2)))
-                            .addComponent(jTextField3)
-                            .addComponent(jYearChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(uploadBookAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                                    .addComponent(uploadBookTitle)))
+                            .addComponent(uploadBookPublisher)
+                            .addComponent(uploadBookYear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(fileChooserStringNew))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(fileChooserButtonNew)
@@ -376,41 +403,39 @@ public class Gui extends javax.swing.JFrame {
                         .addGap(48, 48, 48)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(bookISBNnew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(uploadBookISBN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(scannerISBNupload, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
-                            .addComponent(bookStockNumNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(uploadBookStockNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(scannerStockNumUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2))
+                        .addComponent(uploadBookSubmit))
                     .addGroup(uploadBookLayout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addGap(42, 42, 42)
-                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(uploadBookLayout.createSequentialGroup()
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel11))
-                            .addGroup(uploadBookLayout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(uploadBookAuthor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(uploadBookTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(uploadBookPublisher, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel8)
-                            .addComponent(jYearChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(uploadBookYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel12)
                             .addComponent(fileChooserButtonNew)
                             .addComponent(fileChooserStringNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 74, Short.MAX_VALUE)))
+                        .addGap(0, 65, Short.MAX_VALUE)))
                 .addContainerGap())
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
@@ -483,8 +508,9 @@ public class Gui extends javax.swing.JFrame {
 
     private void scannerISBNuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerISBNuploadActionPerformed
         if(scannerISBNupload.isSelected()){
-            bookISBNnew.setText(JOptionPane.showInputDialog(""));
+            uploadBookISBN.setText(JOptionPane.showInputDialog(""));
             scannerISBNupload.setSelected(false);
+            updateBookISBN();
         }
     }//GEN-LAST:event_scannerISBNuploadActionPerformed
 
@@ -553,6 +579,14 @@ public class Gui extends javax.swing.JFrame {
         
     }//GEN-LAST:event_fileChooserButtonNewActionPerformed
 
+    private void uploadBookSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadBookSubmitActionPerformed
+        
+    }//GEN-LAST:event_uploadBookSubmitActionPerformed
+
+    private void uploadBookISBNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_uploadBookISBNKeyReleased
+        updateBookISBN();
+    }//GEN-LAST:event_uploadBookISBNKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -592,8 +626,6 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JTextField CardNumber;
     private javax.swing.JPanel MenuPanel;
     private javax.swing.JButton UpBorrow;
-    private javax.swing.JTextField bookISBNnew;
-    private javax.swing.JTextField bookStockNumNew;
     private javax.swing.JPanel borrow;
     private javax.swing.JButton borrowButton;
     private com.toedter.calendar.JDateChooser borrowDate;
@@ -601,7 +633,6 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel displayName;
     private javax.swing.JButton fileChooserButtonNew;
     private javax.swing.JTextField fileChooserStringNew;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
@@ -617,10 +648,6 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private com.toedter.calendar.JYearChooser jYearChooser1;
     private javax.swing.JLayeredPane mainPanel;
     private javax.swing.JButton newBookButton;
     private javax.swing.JToggleButton scannerCardBorrow;
@@ -628,6 +655,13 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JToggleButton scannerISBNupload;
     private javax.swing.JToggleButton scannerStockNumUpload;
     private javax.swing.JPanel uploadBook;
+    private javax.swing.JTextField uploadBookAuthor;
+    private javax.swing.JTextField uploadBookISBN;
+    private javax.swing.JTextField uploadBookPublisher;
+    private javax.swing.JTextField uploadBookStockNum;
+    private javax.swing.JButton uploadBookSubmit;
+    private javax.swing.JTextField uploadBookTitle;
+    private com.toedter.calendar.JYearChooser uploadBookYear;
     // End of variables declaration//GEN-END:variables
 
 }
