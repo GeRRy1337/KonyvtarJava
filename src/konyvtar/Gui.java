@@ -54,6 +54,8 @@ public class Gui extends javax.swing.JFrame {
     private void switchPanel(javax.swing.JPanel panel){
         mainPanel.removeAll();
         mainPanel.add(panel);
+        mainPanel.validate();
+        mainPanel.repaint();
     }
     
     private void updateBookISBN(){
@@ -333,10 +335,11 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addComponent(CardNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(scannerCardBorrow, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel15)
-                        .addComponent(borrowStockNumBack, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(scannerStockNumBorrowBack, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(scannerStockNumBorrowBack, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel15)
+                            .addComponent(borrowStockNumBack, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -673,7 +676,27 @@ public class Gui extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!","Info",JOptionPane.INFORMATION_MESSAGE);   
                     
             }else{
-
+                ResultSet authorId = db.getResult("Select * from author Where name='"+uploadBookAuthor.getText()+"'");
+                if(authorId.next()){
+                    if (db.insertToSql("books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL)", String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),result.getString("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"blank"))){
+                        ResultSet bookId = db.getResult("Select id from books Where ISBN="+uploadBookISBN.getText());
+                        if(bookId.next())
+                            if (db.insertToSql("stock(bookId,stockNum)", String.format("VALUES(%s,%s)",bookId.getString("id"),uploadBookStockNum.getText())))
+                                JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!","Info",JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }else{
+                    if (db.insertToSql("author(name,date)", String.format("VALUES(%s,%s)",uploadBookAuthor.getText(),""))){
+                        authorId = db.getResult("Select * from author Where name='"+uploadBookAuthor.getText()+"'");
+                        if(authorId.next()){
+                            if (db.insertToSql("books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL)", String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),result.getString("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"blank"))){
+                                ResultSet bookId = db.getResult("Select id from books Where ISBN="+uploadBookISBN.getText());
+                                if(bookId.next())
+                                    if (db.insertToSql("stock(bookId,stockNum)", String.format("VALUES(%s,%s)",bookId.getString("id"),uploadBookStockNum.getText())))
+                                        JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!","Info",JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        } 
+                    }
+                }
             }
        }catch(Exception e){
            System.err.println(e.getMessage());
