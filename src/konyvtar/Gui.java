@@ -676,19 +676,35 @@ public class Gui extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!","Info",JOptionPane.INFORMATION_MESSAGE);   
                     
             }else{
-                ResultSet authorId = db.getResult("Select * from author Where name='"+uploadBookAuthor.getText()+"'");
-                if(authorId.next()){
-                    if (db.insertToSql("books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL)", String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),result.getString("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"blank"))){
+                if(uploadBookTitle.getText().equals("")){
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtad meg a könyv címét!","Hiba",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if(uploadBookAuthor.getText().equals("")){
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtad meg az írót!","Hiba",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if(uploadBookPublisher.getText().equals("")){
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadót!","Hiba",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if(uploadBookYear.getYear()<0){
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadási dátumot!","Hiba",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                ResultSet authorId = db.getResult("Select id from author Where name='"+uploadBookAuthor.getText()+"'");
+                if( authorId.next() ){
+                    if (db.insertToSql("books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL)", String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),authorId.getString("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"'blank'"))){
                         ResultSet bookId = db.getResult("Select id from books Where ISBN="+uploadBookISBN.getText());
                         if(bookId.next())
                             if (db.insertToSql("stock(bookId,stockNum)", String.format("VALUES(%s,%s)",bookId.getString("id"),uploadBookStockNum.getText())))
                                 JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!","Info",JOptionPane.INFORMATION_MESSAGE);
                     }
                 }else{
-                    if (db.insertToSql("author(name,date)", String.format("VALUES(%s,%s)",uploadBookAuthor.getText(),""))){
-                        authorId = db.getResult("Select * from author Where name='"+uploadBookAuthor.getText()+"'");
+                    if (db.insertToSql("author(name,birthDate)", String.format("VALUES('%s','0')",uploadBookAuthor.getText()))){
+                        authorId = db.getResult("Select id from author Where name='"+uploadBookAuthor.getText()+"'");
                         if(authorId.next()){
-                            if (db.insertToSql("books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL)", String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),result.getString("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"blank"))){
+                            if (db.insertToSql("books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL)", String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),authorId.getString("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"'blank'"))){
                                 ResultSet bookId = db.getResult("Select id from books Where ISBN="+uploadBookISBN.getText());
                                 if(bookId.next())
                                     if (db.insertToSql("stock(bookId,stockNum)", String.format("VALUES(%s,%s)",bookId.getString("id"),uploadBookStockNum.getText())))
@@ -698,9 +714,15 @@ public class Gui extends javax.swing.JFrame {
                     }
                 }
             }
+            uploadBookYear.setYear(1);
+            uploadBookAuthor.setText("");
+            uploadBookTitle.setText("");
+            uploadBookPublisher.setText("");
+            uploadBookISBN.setText("");
+            uploadBookStockNum.setText("");
        }catch(Exception e){
-           System.err.println(e.getMessage());
-           JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Hiba",JOptionPane.ERROR_MESSAGE);
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Hiba",JOptionPane.ERROR_MESSAGE);
        }
         
         
