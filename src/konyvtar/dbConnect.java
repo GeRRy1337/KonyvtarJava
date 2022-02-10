@@ -20,18 +20,20 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 
 public class dbConnect {
-    private Connection myConn;
+    private String defConn;
+    /*private Connection myConn;
     public dbConnect(){
         try{
             myConn= DriverManager.getConnection("jdbc:mysql://localhost:3306/konyvtar","root","");
         }catch(Exception e){
             System.err.println(e.getMessage());
         }
-    }
+    }*/
 
-    private void testApi(){
-        //https://stackoverflow.com/questions/3324717/sending-http-post-request-in-java
-        String defConn="localhost";
+    //https://stackoverflow.com/questions/3324717/sending-http-post-request-in-java
+
+    public dbConnect(){
+        defConn="localhost";
         try{
             File tempFile = new File("conf.config");
             boolean exists = tempFile.exists();
@@ -48,11 +50,21 @@ public class dbConnect {
             }
             conf.close();
         }catch(Exception e){ System.err.println(e); }
+
+    }
+    /**
+    * @param request
+    * "request data separated with ; <br>action to do (Select, Delete, Update) <br>param name then value<br> example: action=Select;username=test;password=test"
+    */
+    private void getRequest(String request){
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost("http://"+defConn+"/konyvtar/api/");
         // Request parameters and other properties.
         ArrayList<BasicNameValuePair> params = new ArrayList<>(2);
-        params.add(new BasicNameValuePair("test", "Hello!"));
+        String paramArr[]=request.split(";");
+        for(int i=0;i<paramArr.length;i++){
+            params.add(new BasicNameValuePair(paramArr[i].split("=")[0],paramArr[i].split("=")[1]));
+        }
         params.add(new BasicNameValuePair("key", "313303ef7840acb49ba489ddb9247be4969e8a650f28eda39756556868d9c1ea"));
         httppost.setEntity(new UrlEncodedFormEntity(params, Charset.forName(StandardCharsets.UTF_8.name())));
         //Execute and get the response.
@@ -74,7 +86,7 @@ public class dbConnect {
         }
     }
     
-    public ResultSet getResult(String sql){
+    /*public ResultSet getResult(String sql){
         try{
             Statement myStmt=this.myConn.createStatement();
             ResultSet myRs = myStmt.executeQuery(sql);
@@ -84,7 +96,7 @@ public class dbConnect {
             System.err.println(e.getMessage());
         }
         return null;
-    }
+    }*/
     /**
      * 
      * @param table
@@ -93,7 +105,7 @@ public class dbConnect {
      *  "Values(values)" example: "VALUES ('username','password')" <br>
      * @return boolean value if succesful then true else false
      */
-    public boolean insertToSql(String table,String value){
+   /* public boolean insertToSql(String table,String value){
 
         if(table.equals("") || value.equals("")){
             return false;
@@ -107,7 +119,7 @@ public class dbConnect {
             System.err.println(e.getMessage());
         }
         return false;
-    }
+    }*/
     /**
      * @param table
      *  "name (+ join)" example: "table (inner join table2 on table.record = table2.record ... etc)" <br>
@@ -117,7 +129,7 @@ public class dbConnect {
      *  "Where ..." <br>
      * @return boolean value if succesful then true else false
     */
-    public boolean updateSql(String table,String record,String statement){
+    /*public boolean updateSql(String table,String record,String statement){
         if(table.equals("") || record.equals("")){
             return false;
         }
@@ -142,5 +154,5 @@ public class dbConnect {
             System.err.println(e.getMessage());
         }
         return false;
-    }
+    }*/
 }
