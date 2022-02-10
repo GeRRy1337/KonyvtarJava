@@ -9,8 +9,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -56,8 +57,8 @@ public class dbConnect {
     * @param request
     * "request data separated with ; <br>action to do (Select, Delete, Update) <br>param name then value<br> example: action=Select;username=test;password=test"
     */
-    public String[] getRequest(String request){
-        String responseString[]=new String[10];
+    public Map getRequest(String request){
+        Map responseString=new HashMap<String,String>();
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost("http://"+defConn+"/konyvtar/api/");
         // Request parameters and other properties.
@@ -79,7 +80,7 @@ public class dbConnect {
                     int index=0;
                     while((sor = br.readLine())!=null ){
                         System.out.println(sor);
-                        responseString[index++]=sor;
+                        responseString.put(sor.split(":")[0],sor.split(":")[1]);
                     }
                     br.close();
                 }
