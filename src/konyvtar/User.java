@@ -1,6 +1,6 @@
 package konyvtar;
 
-import java.sql.ResultSet;
+import java.util.Map;
 
 public class User {
     private int id;
@@ -18,10 +18,10 @@ public class User {
     
     public String getUsername(){
         dbConnect db=new dbConnect();
-        ResultSet result = db.getResult("Select username from users where id="+this.id);
+        Map result = db.getRequest("action=Select;from=users;id="+this.id);
         try{
-            while(result.next()){
-                username=result.getString("username");
+            if(result.get("response").equals("True")){
+                username=""+result.get("username");
             }
         }catch(Exception e){
             System.err.println(e.getMessage());

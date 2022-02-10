@@ -55,21 +55,19 @@ public class Gui extends javax.swing.JFrame {
     private void switchPanel(javax.swing.JPanel panel){
         mainPanel.removeAll();
         mainPanel.add(panel);
-        mainPanel.repaint();
-        mainPanel.revalidate();
         
     }
     
     private void updateBookISBN(){
         if(!uploadBookISBN.getText().equals("")){
             dbConnect db=new dbConnect();
-            Map result = db.getRequest("action=Select;ISBN="+uploadBookISBN.getText());
+            Map result = db.getRequest("action=Select;from=books;ISBN="+uploadBookISBN.getText());
              try{
                 if(result.get("response").equals("True")){
                     uploadBookTitle.setText(String.valueOf(result.get("BookTitle")));
                     uploadBookPublisher.setText(String.valueOf(result.get("Publisher")));
                     uploadBookYear.setValue(Integer.parseInt(String.valueOf(result.get("YearOfPublication"))));
-                    Map author = db.getRequest("action=Select;id="+result.get("id"));
+                    Map author = db.getRequest("action=Select;from=author;id="+result.get("id"));
                     if(author.get("response").equals("True"))
                         uploadBookAuthor.setText(String.valueOf(author.get("name")));
                     else
@@ -607,26 +605,27 @@ public class Gui extends javax.swing.JFrame {
             return;
         }
         dbConnect db=new dbConnect();
-        ResultSet result = db.getResult("Select id from cards Where id=\""+CardNumber.getText()+"\"");
+        Map result = db.getRequest("action=Select;from=cards;id="+CardNumber.getText());
         try{
-            if(!result.next()){
+            if(result.get("response").equals("False")){
                 JOptionPane.showMessageDialog(rootPane, "Hibás kártyaszám!","Hiba",JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            result = db.getResult("Select stockNum from stock Where stockNum=\""+borrowStockNum.getText()+"\"");
-            if(!result.next()){
+            result = db.getRequest("action=Select;from=stock;stockNum="+borrowStockNum.getText()); 
+            if(result.get("response").equals("False")){
                 JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!","Hiba",JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            result = db.getResult("Select id,cardNum,stockNum,date from borrow where stockNum=\""+borrowStockNum.getText()+"\" and state=0");
-            if(result.next()){
-                String errorString=String.format("Kártyaszám:%s, Könyv azonosító:%s, Határidő:%s",result.getString("cardNum"),result.getString("stockNum"),result.getString("date"));
+            result = db.getRequest("action=Select;from=borrow;stockNum="+borrowStockNum.getText()+";state=0"); 
+            if(result.get("response").equals("True")){
+                String errorString=String.format("Kártyaszám:%s, Könyv azonosító:%s, Határidő:%s",result.get("cardNum"),result.get("stockNum"),result.get("date"));
                 JOptionPane.showMessageDialog(rootPane, "Ez a könyv ki van kölcsönözve: "+errorString,"Hiba",JOptionPane.ERROR_MESSAGE);
                 return;
             }
             SimpleDateFormat sd=new SimpleDateFormat("yyyy-MM-dd");
             
-            if (db.insertToSql("borrow(cardNum,stockNum,date,state)", String.format("VALUES( %s,%s,'%s',0 )",CardNumber.getText(),borrowStockNum.getText(),String.valueOf(sd.format(borrowDate.getDate()))))){
+            result = db.getRequest("action=Insert;to=borrow(cardNum,stockNum,date,state);values="+String.format("VALUES( %s,%s,'%s',0 )",CardNumber.getText(),borrowStockNum.getText(),String.valueOf(sd.format(borrowDate.getDate()))));
+            if(result.get("response").equals("True")){
                 JOptionPane.showMessageDialog(rootPane, "Sikeres kölcsönzés!","Info",JOptionPane.INFORMATION_MESSAGE);
                 CardNumber.setText("kártyaszám");
                 borrowStockNum.setText("könyvtári szám");
@@ -669,14 +668,16 @@ public class Gui extends javax.swing.JFrame {
             return;
         }
         dbConnect db=new dbConnect();
-        ResultSet result = db.getResult("Select * from books Where ISBN='"+uploadBookISBN.getText()+"'");
+        Map result = db.getRequest("action=Select;from=books;ISBN="+uploadBookISBN.getText());
         try{
-            if(result.next()){
-                ResultSet bookId = db.getResult("Select id from books Where ISBN="+uploadBookISBN.getText());
-                if(bookId.next())
-                    if (db.insertToSql("stock(bookId,stockNum)", String.format("VALUES(%s,%s)",bookId.getString("id"),uploadBookStockNum.getText())))
+            if(result.get("response").equals("True")){
+                Map bookId = db.getRequest("action=Select;from=books;ISBN="+uploadBookISBN.getText());
+                if(bookId.get("response").equals("True"))
+                    result = db.getRequest("action=Insert;to=stock(bookId,stockNum);values="+String.format("VALUES(%s,%s)",bookId.get("id"),uploadBookStockNum.getText()));
+                    if(result.get("response").equals("True"))
                         JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!","Info",JOptionPane.INFORMATION_MESSAGE);   
-                    
+                    else 
+                        JOptionPane.showMessageDialog(rootPane, "Sikertelen könyv feltötltés!","Hiba",JOptionPane.ERROR_MESSAGE);   
             }else{
                 if(uploadBookTitle.getText().equals("")){
                     JOptionPane.showMessageDialog(rootPane, "Nem adtad meg a könyv címét!","Hiba",JOptionPane.ERROR_MESSAGE);
@@ -694,22 +695,27 @@ public class Gui extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadási dátumot!","Hiba",JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-                ResultSet authorId = db.getResult("Select id from author Where name='"+uploadBookAuthor.getText()+"'");
-                if( authorId.next() ){
-                    if (db.insertToSql("books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL)", String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),authorId.getString("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"'blank'"))){
-                        ResultSet bookId = db.getResult("Select id from books Where ISBN="+uploadBookISBN.getText());
-                        if(bookId.next())
-                            if (db.insertToSql("stock(bookId,stockNum)", String.format("VALUES(%s,%s)",bookId.getString("id"),uploadBookStockNum.getText())))
+                Map authorId = db.getRequest("action=Select;from=author;name="+uploadBookAuthor.getText());
+                if( authorId.get("response").equals("True")){
+                    result = db.getRequest("action=Insert;to=books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL);values="+String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),authorId.get("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"'blank'"));
+                    if(result.get("response").equals("True")) {
+                        Map bookId = db.getRequest("action=Select;from=books;ISBN="+uploadBookISBN.getText());
+                        if(bookId.get("response").equals("True"))
+                            result = db.getRequest("action=Insert;to=stock(bookId,stockNum);values="+String.format("VALUES(%s,%s)",bookId.get("id"),uploadBookStockNum.getText()));
+                            if(result.get("response").equals("True")) 
                                 JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!","Info",JOptionPane.INFORMATION_MESSAGE);
                     }
                 }else{
-                    if (db.insertToSql("author(name,birthDate)", String.format("VALUES('%s','0')",uploadBookAuthor.getText()))){
-                        authorId = db.getResult("Select id from author Where name='"+uploadBookAuthor.getText()+"'");
-                        if(authorId.next()){
-                            if (db.insertToSql("books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL)", String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),authorId.getString("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"'blank'"))){
-                                ResultSet bookId = db.getResult("Select id from books Where ISBN="+uploadBookISBN.getText());
-                                if(bookId.next())
-                                    if (db.insertToSql("stock(bookId,stockNum)", String.format("VALUES(%s,%s)",bookId.getString("id"),uploadBookStockNum.getText())))
+                    result=db.getRequest("action=Insert;to=author(name,birthDate);values="+String.format("VALUES('%s','0')",uploadBookAuthor.getText()));
+                    if(result.get("response").equals("True")) {
+                        authorId = db.getRequest("action=Select;from=author;name="+uploadBookAuthor.getText());
+                        if(authorId.get("response").equals("True")){
+                            result=db.getRequest("action=Insert;to=books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL);values="+String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),authorId.get("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"'blank'"));
+                            if(result.get("response").equals("True")) {
+                                Map bookId = db.getRequest("action=Select;from=books;ISBN="+uploadBookISBN.getText());
+                                if(bookId.get("response").equals("True"))
+                                    result=db.getRequest("action=Insert;to=stock(bookId,stockNum);values="+String.format("VALUES(%s,%s)",bookId.get("id"),uploadBookStockNum.getText()));
+                                    if(result.get("response").equals("True"))
                                         JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!","Info",JOptionPane.INFORMATION_MESSAGE);
                             }
                         } 
@@ -745,7 +751,8 @@ public class Gui extends javax.swing.JFrame {
         }
         dbConnect db=new dbConnect();
         SimpleDateFormat sd=new SimpleDateFormat("yyyy-MM-dd");
-        if(db.updateSql("borrow", "state=1, returnDate='"+sd.format(System.currentTimeMillis())+"'", "where stockNum="+borrowStockNumBack.getText()+" and state=0")){
+        Map result=db.getRequest("action=Update;to=borrow;set=state:1,returnDate:"+sd.format(System.currentTimeMillis())+";stockNum="+borrowStockNumBack.getText()+";state=0");
+        if(result.get("response").equals("True")) {
             JOptionPane.showMessageDialog(rootPane, "Sikeres könyv leadás!","Info",JOptionPane.INFORMATION_MESSAGE);
             borrowStockNumBack.setText("");
         }
