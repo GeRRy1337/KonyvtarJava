@@ -8,6 +8,7 @@ package konyvtar;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.sql.ResultSet;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -41,10 +42,10 @@ public class Login extends javax.swing.JFrame {
             BigInteger bigInt = new BigInteger(1,digest);
             myHash = bigInt.toString(16);
         }catch(Exception e){System.err.println(e.getMessage());}
-        String result[] = sql.getRequest("action=Select;username="+user.getText()+";password="+myHash);
+        Map result = sql.getRequest("action=Select;username="+user.getText()+";password="+myHash);
         try{
-            if(result[0].equals("True")){
-                Main.GuiWindow.returnLogin(Integer.parseInt(result[1]));
+            if(result.get("response").equals("True")){
+                Main.GuiWindow.returnLogin(Integer.parseInt( String.valueOf(result.get("id")) ));
                 user.setText("");
                 pass.setText("");
                 this.dispose();

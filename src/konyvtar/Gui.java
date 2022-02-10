@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -62,15 +63,15 @@ public class Gui extends javax.swing.JFrame {
     private void updateBookISBN(){
         if(!uploadBookISBN.getText().equals("")){
             dbConnect db=new dbConnect();
-            ResultSet result = db.getResult("Select * from books Where ISBN='"+uploadBookISBN.getText()+"'");
+            Map result = db.getRequest("action=Select;ISBN="+uploadBookISBN.getText());
              try{
-                if(result.next()){
-                    uploadBookTitle.setText(result.getString("BookTitle"));
-                    uploadBookPublisher.setText(result.getString("Publisher"));
-                    uploadBookYear.setValue(result.getInt("YearOfPublication"));
-                    ResultSet author = db.getResult("Select name from author Where id='"+result.getInt("AuthorId")+"'");
-                    if(author.next())
-                        uploadBookAuthor.setText(author.getString("name"));
+                if(result.get("response").equals("True")){
+                    uploadBookTitle.setText(String.valueOf(result.get("BookTitle")));
+                    uploadBookPublisher.setText(String.valueOf(result.get("Publisher")));
+                    uploadBookYear.setValue(Integer.parseInt(String.valueOf(result.get("YearOfPublication"))));
+                    Map author = db.getRequest("action=Select;id="+result.get("id"));
+                    if(author.get("response").equals("True"))
+                        uploadBookAuthor.setText(String.valueOf(author.get("name")));
                     else
                         uploadBookAuthor.setText("Ismeretlen");
                 }else{
