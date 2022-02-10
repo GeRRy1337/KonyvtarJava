@@ -56,7 +56,8 @@ public class dbConnect {
     * @param request
     * "request data separated with ; <br>action to do (Select, Delete, Update) <br>param name then value<br> example: action=Select;username=test;password=test"
     */
-    private void getRequest(String request){
+    public String[] getRequest(String request){
+        String responseString[]=new String[10];
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost("http://"+defConn+"/konyvtar/api/");
         // Request parameters and other properties.
@@ -75,8 +76,10 @@ public class dbConnect {
                 try (InputStream instream = entity.getContent()) {
                     BufferedReader br=new BufferedReader(new InputStreamReader(instream,Charset.forName(StandardCharsets.UTF_8.name())));
                     String sor;
+                    int index=0;
                     while((sor = br.readLine())!=null ){
                         System.out.println(sor);
+                        responseString[index++]=sor;
                     }
                     br.close();
                 }
@@ -84,6 +87,7 @@ public class dbConnect {
         }catch(IOException e){
             System.err.println(e);
         }
+        return responseString;
     }
     
     /*public ResultSet getResult(String sql){

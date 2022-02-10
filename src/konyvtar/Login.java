@@ -41,25 +41,18 @@ public class Login extends javax.swing.JFrame {
             BigInteger bigInt = new BigInteger(1,digest);
             myHash = bigInt.toString(16);
         }catch(Exception e){System.err.println(e.getMessage());}
-        ResultSet result = sql.getResult("Select id from users Where username=\""+user.getText()+"\" and password=\""+myHash+"\"");
+        String result[] = sql.getRequest("action=Select;username="+user.getText()+";password="+myHash);
         try{
-            while(result.next()){
-                if (sql.getResult("Select id from users Where id="+result.getInt("id")+" and id in (select id from admins)").next()){
-                    System.err.println("belépve");
-                    Main.GuiWindow.returnLogin(result.getInt("id"));
-                    user.setText("");
-                    pass.setText("");
-                    this.dispose();
-                    return;
-                }else{
-                    JOptionPane.showMessageDialog(rootPane, "Nincs megfelelő jogosultságod!","Error",JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                
+            if(result[0].equals("True")){
+                Main.GuiWindow.returnLogin(Integer.parseInt(result[1]));
+                user.setText("");
+                pass.setText("");
+                this.dispose();
+                return;
             }
-            JOptionPane.showMessageDialog(rootPane, "Nem létezik ilyen felhasználó ezzel a jelszóval!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "Hibás bejelentkezés!","Error",JOptionPane.ERROR_MESSAGE);
         }catch(Exception e){
-            System.err.println(e.getMessage());
+            System.err.println(e);
             JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Error",JOptionPane.ERROR_MESSAGE);
         }
     }
