@@ -21,7 +21,7 @@ import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 
 public class dbConnect {
-    private String defConn;
+    private String defConn,defRepo;
     /*private Connection myConn;
     public dbConnect(){
         try{
@@ -35,20 +35,24 @@ public class dbConnect {
 
     public dbConnect(){
         defConn="localhost";
+        defRepo="konyvtar";
         try{
             File tempFile = new File("conf.config");
             boolean exists = tempFile.exists();
             if(!exists){
                 tempFile.createNewFile();
                 FileWriter fw=new FileWriter("conf.config");
-                fw.write("address = localhost");
+                fw.write("address = localhost\n");
+                fw.write("url = konyvtar");
                 fw.close();
             }
             BufferedReader conf=new BufferedReader(new FileReader("conf.config"));
             String sor;
-            while((sor=conf.readLine())!=null ){
+            if ((sor=conf.readLine())!=null )
                 defConn=sor.split("=")[1].trim();
-            }
+            if ((sor=conf.readLine())!=null )
+                defRepo=sor.split("=")[1].trim();
+            
             conf.close();
         }catch(Exception e){ System.err.println(e); }
 
@@ -60,7 +64,7 @@ public class dbConnect {
     public Map getRequest(String request){
         Map responseString=new HashMap<String,String>();
         CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost("http://"+defConn+"/konyvtar/api/");
+        HttpPost httppost = new HttpPost("http://"+defConn+"/"+defRepo+"/api/");
         // Request parameters and other properties.
         ArrayList<BasicNameValuePair> params = new ArrayList<>(2);
         String paramArr[]=request.split(";");
