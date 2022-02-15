@@ -145,6 +145,12 @@ public class Gui extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         fileChooserButtonNew = new javax.swing.JButton();
         fileChooserStringNew = new javax.swing.JTextField();
+        userManager = new javax.swing.JPanel();
+        jSeparator3 = new javax.swing.JSeparator();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Main");
@@ -167,7 +173,7 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("jButton3");
+        jButton3.setText("Felhasználók kezelése");
 
         jButton4.setText("Kijelentkezés");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -182,11 +188,11 @@ public class Gui extends javax.swing.JFrame {
             MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MenuPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
                 .addGap(180, 180, 180)
                 .addComponent(borrowButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(newBookButton, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                .addComponent(newBookButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -293,7 +299,7 @@ public class Gui extends javax.swing.JFrame {
                                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(borrowLayout.createSequentialGroup()
                                         .addComponent(scannerStockNumBorrow)
-                                        .addContainerGap(400, Short.MAX_VALUE))
+                                        .addContainerGap(405, Short.MAX_VALUE))
                                     .addGroup(borrowLayout.createSequentialGroup()
                                         .addComponent(scannerCardBorrow)
                                         .addGap(53, 53, 53)
@@ -319,7 +325,7 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(borrowLayout.createSequentialGroup()
                     .addGap(354, 354, 354)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(355, Short.MAX_VALUE)))
+                    .addContainerGap(360, Short.MAX_VALUE)))
         );
         borrowLayout.setVerticalGroup(
             borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -517,8 +523,66 @@ public class Gui extends javax.swing.JFrame {
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
+        userManager.setPreferredSize(new java.awt.Dimension(729, 290));
+        userManager.setRequestFocusEnabled(false);
+
+        jSeparator3.setBackground(new java.awt.Color(102, 102, 255));
+        jSeparator3.setForeground(new java.awt.Color(102, 102, 255));
+        jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        jLabel16.setText("Admin engedély hozzáadása");
+
+        jLabel17.setText("Kártya felhasználóhoz rendelése");
+        jLabel17.setToolTipText("");
+
+        jLabel18.setText("Felhasználónév");
+
+        jTextField1.setText("jTextField1");
+
+        javax.swing.GroupLayout userManagerLayout = new javax.swing.GroupLayout(userManager);
+        userManager.setLayout(userManagerLayout);
+        userManagerLayout.setHorizontalGroup(
+            userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(userManagerLayout.createSequentialGroup()
+                .addGap(103, 103, 103)
+                .addComponent(jLabel16)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 218, Short.MAX_VALUE)
+                .addComponent(jLabel17)
+                .addGap(116, 116, 116))
+            .addGroup(userManagerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel18)
+                .addGap(18, 18, 18)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(userManagerLayout.createSequentialGroup()
+                    .addGap(357, 357, 357)
+                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(357, Short.MAX_VALUE)))
+        );
+        userManagerLayout.setVerticalGroup(
+            userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(userManagerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel17))
+                .addGap(49, 49, 49)
+                .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel18)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(196, Short.MAX_VALUE))
+            .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(userManagerLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jSeparator3)
+                    .addContainerGap()))
+        );
+
         mainPanel.setLayer(borrow, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainPanel.setLayer(uploadBook, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        mainPanel.setLayer(userManager, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -527,12 +591,22 @@ public class Gui extends javax.swing.JFrame {
             .addComponent(borrow, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(uploadBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(userManager, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(borrow, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(uploadBook, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(userManager, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -815,6 +889,9 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -825,6 +902,8 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JLayeredPane mainPanel;
     private javax.swing.JButton newBookButton;
     private javax.swing.JToggleButton scannerCardBorrow;
@@ -840,6 +919,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton uploadBookSubmit;
     private javax.swing.JTextField uploadBookTitle;
     private com.toedter.calendar.JYearChooser uploadBookYear;
+    private javax.swing.JPanel userManager;
     // End of variables declaration//GEN-END:variables
 
 }
