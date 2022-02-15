@@ -53,9 +53,9 @@ public class Gui extends javax.swing.JFrame {
     }
     
     private void switchPanel(javax.swing.JPanel panel){
-        mainPanel.removeAll();
-        mainPanel.add(panel);
-        
+        mainPanel.moveToFront(panel);
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
     
     private void updateBookISBN(){
