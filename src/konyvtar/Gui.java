@@ -53,6 +53,10 @@ public class Gui extends javax.swing.JFrame {
     }
     
     private void switchPanel(javax.swing.JPanel panel){
+        if (panel==borrow)
+            borrowDate.setEnabled(true);
+        else
+            borrowDate.setEnabled(false);
         mainPanel.moveToFront(panel);
         mainPanel.revalidate();
         mainPanel.repaint();
@@ -146,11 +150,11 @@ public class Gui extends javax.swing.JFrame {
         fileChooserButtonNew = new javax.swing.JButton();
         fileChooserStringNew = new javax.swing.JTextField();
         userManager = new javax.swing.JPanel();
-        jSeparator3 = new javax.swing.JSeparator();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jSeparator4 = new javax.swing.JSeparator();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Main");
@@ -174,6 +178,11 @@ public class Gui extends javax.swing.JFrame {
         });
 
         jButton3.setText("Felhasználók kezelése");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Kijelentkezés");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -188,7 +197,7 @@ public class Gui extends javax.swing.JFrame {
             MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MenuPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
                 .addGap(180, 180, 180)
                 .addComponent(borrowButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -299,7 +308,7 @@ public class Gui extends javax.swing.JFrame {
                                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(borrowLayout.createSequentialGroup()
                                         .addComponent(scannerStockNumBorrow)
-                                        .addContainerGap(405, Short.MAX_VALUE))
+                                        .addContainerGap(425, Short.MAX_VALUE))
                                     .addGroup(borrowLayout.createSequentialGroup()
                                         .addComponent(scannerCardBorrow)
                                         .addGap(53, 53, 53)
@@ -355,7 +364,7 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
                     .addComponent(borrowDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(UpBorrow)
                     .addComponent(borrowBackButton))
@@ -518,65 +527,62 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(jLabel12)
                             .addComponent(fileChooserButtonNew)
                             .addComponent(fileChooserStringNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 65, Short.MAX_VALUE)))
+                        .addGap(0, 86, Short.MAX_VALUE)))
                 .addContainerGap())
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        userManager.setPreferredSize(new java.awt.Dimension(729, 290));
-        userManager.setRequestFocusEnabled(false);
+        jSeparator4.setBackground(new java.awt.Color(102, 102, 255));
+        jSeparator4.setForeground(new java.awt.Color(102, 102, 255));
+        jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jSeparator3.setBackground(new java.awt.Color(102, 102, 255));
-        jSeparator3.setForeground(new java.awt.Color(102, 102, 255));
-        jSeparator3.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        jLabel19.setText("Admin engedély hozzáadása");
 
-        jLabel16.setText("Admin engedély hozzáadása");
+        jLabel20.setText("Kártya felhasználóhoz rendelése");
+        jLabel20.setToolTipText("");
 
-        jLabel17.setText("Kártya felhasználóhoz rendelése");
-        jLabel17.setToolTipText("");
+        jLabel21.setText("Felhasználónév");
 
-        jLabel18.setText("Felhasználónév");
-
-        jTextField1.setText("jTextField1");
+        jTextField2.setText("jTextField1");
 
         javax.swing.GroupLayout userManagerLayout = new javax.swing.GroupLayout(userManager);
         userManager.setLayout(userManagerLayout);
         userManagerLayout.setHorizontalGroup(
             userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(userManagerLayout.createSequentialGroup()
-                .addGap(103, 103, 103)
-                .addComponent(jLabel16)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 218, Short.MAX_VALUE)
-                .addComponent(jLabel17)
-                .addGap(116, 116, 116))
+                .addGap(71, 71, 71)
+                .addComponent(jLabel19)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 264, Short.MAX_VALUE)
+                .addComponent(jLabel20)
+                .addGap(112, 112, 112))
             .addGroup(userManagerLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel18)
-                .addGap(18, 18, 18)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(56, 56, 56)
+                .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel21)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(userManagerLayout.createSequentialGroup()
-                    .addGap(357, 357, 357)
-                    .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(357, Short.MAX_VALUE)))
+                    .addGap(0, 362, Short.MAX_VALUE)
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 362, Short.MAX_VALUE)))
         );
         userManagerLayout.setVerticalGroup(
             userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(userManagerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel16)
-                    .addComponent(jLabel17))
-                .addGap(49, 49, 49)
-                .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel18)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(196, Short.MAX_VALUE))
+                    .addComponent(jLabel19)
+                    .addComponent(jLabel20))
+                .addGap(57, 57, 57)
+                .addComponent(jLabel21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(184, Short.MAX_VALUE))
             .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(userManagerLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jSeparator3)
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
@@ -593,9 +599,8 @@ public class Gui extends javax.swing.JFrame {
                 .addComponent(uploadBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(userManager, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                    .addContainerGap()
+                    .addComponent(userManager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -603,10 +608,7 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(uploadBook, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(userManager, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(userManager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -832,6 +834,10 @@ public class Gui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_borrowBackButtonActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        switchPanel(userManager);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -889,10 +895,10 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -902,8 +908,8 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JLayeredPane mainPanel;
     private javax.swing.JButton newBookButton;
     private javax.swing.JToggleButton scannerCardBorrow;
