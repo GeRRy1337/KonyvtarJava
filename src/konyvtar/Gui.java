@@ -729,7 +729,7 @@ public class Gui extends javax.swing.JFrame {
         int retVal = chooseImage.showOpenDialog(rootPane);
         if (retVal == JFileChooser.APPROVE_OPTION) {
             File selectedfiles = chooseImage.getSelectedFile();
-            fileChooserStringNew.setText(selectedfiles.getName());
+            fileChooserStringNew.setText(selectedfiles.getAbsolutePath());
         }
         
     }//GEN-LAST:event_fileChooserButtonNewActionPerformed
@@ -773,26 +773,28 @@ public class Gui extends javax.swing.JFrame {
                 }
                 Map authorId = db.getRequest("action=Select;from=author;name="+uploadBookAuthor.getText());
                 if( authorId.get("response").equals("True")){
-                    result = db.getRequest("action=Insert;to=books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL);values="+String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),authorId.get("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"'blank'"));
+                    result = db.getRequest("action=Insert;img="+fileChooserStringNew.getText()+";to=books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL);values="+String.format("VALUES( %s, '%s', %s, '%s', '%s', blank )",uploadBookISBN.getText(),uploadBookTitle.getText(),authorId.get("id"),uploadBookYear.getYear(),uploadBookPublisher.getText()));
                     if(result.get("response").equals("True")) {
                         Map bookId = db.getRequest("action=Select;from=books;ISBN="+uploadBookISBN.getText());
-                        if(bookId.get("response").equals("True"))
+                        if(bookId.get("response").equals("True")){
                             result = db.getRequest("action=Insert;to=stock(bookId,stockNum);values="+String.format("VALUES(%s,%s)",bookId.get("id"),uploadBookStockNum.getText()));
-                            if(result.get("response").equals("True")) 
+                            if(result.get("response").equals("True"))
                                 JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!","Info",JOptionPane.INFORMATION_MESSAGE);
+                        }
                     }
                 }else{
                     result=db.getRequest("action=Insert;to=author(name,birthDate);values="+String.format("VALUES('%s','0')",uploadBookAuthor.getText()));
                     if(result.get("response").equals("True")) {
                         authorId = db.getRequest("action=Select;from=author;name="+uploadBookAuthor.getText());
                         if(authorId.get("response").equals("True")){
-                            result=db.getRequest("action=Insert;to=books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL);values="+String.format("VALUES( %s, '%s', %s, '%s', '%s', %s )",uploadBookISBN.getText(),uploadBookTitle.getText(),authorId.get("id"),uploadBookYear.getYear(),uploadBookPublisher.getText(),"'blank'"));
+                            result=db.getRequest("action=Insert;img="+fileChooserStringNew.getText()+";to=books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL);values="+String.format("VALUES( %s, '%s', %s, '%s', '%s', blank )",uploadBookISBN.getText(),uploadBookTitle.getText(),authorId.get("id"),uploadBookYear.getYear(),uploadBookPublisher.getText()));
                             if(result.get("response").equals("True")) {
                                 Map bookId = db.getRequest("action=Select;from=books;ISBN="+uploadBookISBN.getText());
-                                if(bookId.get("response").equals("True"))
+                                if(bookId.get("response").equals("True")){
                                     result=db.getRequest("action=Insert;to=stock(bookId,stockNum);values="+String.format("VALUES(%s,%s)",bookId.get("id"),uploadBookStockNum.getText()));
                                     if(result.get("response").equals("True"))
                                         JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!","Info",JOptionPane.INFORMATION_MESSAGE);
+                                }
                             }
                         } 
                     }
@@ -804,6 +806,7 @@ public class Gui extends javax.swing.JFrame {
             uploadBookPublisher.setText("");
             uploadBookISBN.setText("");
             uploadBookStockNum.setText("");
+            fileChooserStringNew.setText("");
        }catch(Exception e){
             System.err.println(e.getMessage());
             JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Hiba",JOptionPane.ERROR_MESSAGE);
