@@ -101,7 +101,7 @@
                   <Component id="pass" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="submit" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="83" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -132,7 +132,7 @@
         <Component class="javax.swing.JLabel" name="login_icon">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="D:\Dokumentumok\NetBeansProjects\Konyvtar\lib\login_icon.png"/>
+              <Image iconType="2" name="C:\Users\Moln&#xe1;r Gerg&#x151;\Documents\NetBeansProjects\KonyvtarJava\lib\login_icon.png"/>
             </Property>
           </Properties>
         </Component>
@@ -142,7 +142,7 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="D:\Dokumentumok\NetBeansProjects\Konyvtar\lib\settings_icon.png"/>
+              <Image iconType="2" name="C:\Users\Moln&#xe1;r Gerg&#x151;\Documents\NetBeansProjects\KonyvtarJava\lib\settings_icon.png"/>
             </Property>
             <Property name="autoscrolls" type="boolean" value="true"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
