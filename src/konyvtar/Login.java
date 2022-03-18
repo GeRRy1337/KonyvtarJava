@@ -96,10 +96,10 @@ public class Login extends javax.swing.JFrame {
 
         jLabel2.setText("Jelszó:");
 
-        login_icon.setIcon(new javax.swing.ImageIcon("C:\\Users\\Molnár Gergő\\Documents\\NetBeansProjects\\KonyvtarJava\\lib\\login_icon.png")); // NOI18N
+        login_icon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/konyvtar/pics/login_icon.png"))); // NOI18N
 
         settings.setBackground(new java.awt.Color(255, 255, 255));
-        settings.setIcon(new javax.swing.ImageIcon("C:\\Users\\Molnár Gergő\\Documents\\NetBeansProjects\\KonyvtarJava\\lib\\settings_icon.png")); // NOI18N
+        settings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/konyvtar/pics/settings_icon.png"))); // NOI18N
         settings.setAutoscrolls(true);
         settings.setBorder(null);
         settings.setBorderPainted(false);

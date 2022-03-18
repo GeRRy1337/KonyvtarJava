@@ -155,6 +155,11 @@ public class Gui extends javax.swing.JFrame {
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jLabel22 = new javax.swing.JLabel();
+        cardUser = new javax.swing.JTextField();
+        jLabel23 = new javax.swing.JLabel();
+        cardUserNumber = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Main");
@@ -545,6 +550,17 @@ public class Gui extends javax.swing.JFrame {
 
         jTextField2.setText("jTextField1");
 
+        jLabel22.setText("Felhasználónév");
+
+        jLabel23.setText("Kártyaszám");
+
+        jButton1.setText("Küldés");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout userManagerLayout = new javax.swing.GroupLayout(userManager);
         userManager.setLayout(userManagerLayout);
         userManagerLayout.setHorizontalGroup(
@@ -555,12 +571,19 @@ public class Gui extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 264, Short.MAX_VALUE)
                 .addComponent(jLabel20)
                 .addGap(112, 112, 112))
-            .addGroup(userManagerLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userManagerLayout.createSequentialGroup()
                 .addGap(56, 56, 56)
                 .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel21)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(jLabel23)
+                    .addComponent(cardUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel22)
+                    .addComponent(cardUser, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(120, 120, 120))
             .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(userManagerLayout.createSequentialGroup()
                     .addGap(0, 362, Short.MAX_VALUE)
@@ -574,11 +597,24 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
                     .addComponent(jLabel20))
-                .addGap(57, 57, 57)
-                .addComponent(jLabel21)
+                .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(userManagerLayout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addComponent(jLabel21)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(userManagerLayout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(jLabel22)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cardUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(15, 15, 15)
+                .addComponent(jLabel23)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(184, Short.MAX_VALUE))
+                .addComponent(cardUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(47, 47, 47)
+                .addComponent(jButton1)
+                .addContainerGap(54, Short.MAX_VALUE))
             .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(userManagerLayout.createSequentialGroup()
                     .addContainerGap()
@@ -830,7 +866,7 @@ public class Gui extends javax.swing.JFrame {
         }
         dbConnect db=new dbConnect();
         SimpleDateFormat sd=new SimpleDateFormat("yyyy-MM-dd");
-        Map result=db.getRequest("action=Update;to=borrow;set=state:1,returnDate:"+sd.format(System.currentTimeMillis())+";stockNum="+borrowStockNumBack.getText()+";state=0");
+        Map result=db.getRequest("action=Update;to=borrow;set=state:1,returnDate:'"+sd.format(System.currentTimeMillis())+"';stockNum="+borrowStockNumBack.getText()+";state=0");
         if(result.get("response").equals("True")) {
             JOptionPane.showMessageDialog(rootPane, "Sikeres könyv leadás!","Info",JOptionPane.INFORMATION_MESSAGE);
             borrowStockNumBack.setText("");
@@ -840,6 +876,47 @@ public class Gui extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         switchPanel(userManager);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if(cardUser.getText().equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg felhasználónevet!","Hiba",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(cardUserNumber.getText().equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártyaszámot!","Hiba",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        dbConnect db=new dbConnect();
+        int userId=0;
+        Map resultId = db.getRequest("action=Select;from=users;username='"+cardUser.getText()+"'");
+        if(resultId.get("response").equals("True")){
+            userId=Integer.parseInt(String.valueOf(resultId.get("id")));
+        }
+        Map result = db.getRequest("action=Select;from=usercards;userId="+userId);
+        if(result.get("response").equals("True")){
+            int update=JOptionPane.showConfirmDialog(rootPane, "Ehez a felhasználóhoz már van kártya társítva, kívánja folytatni a folyamatot?", "Info",JOptionPane.YES_NO_OPTION );
+            if(update==JOptionPane.NO_OPTION){
+                cardUser.setText("");
+                cardUserNumber.setText("");
+            }else if(update==JOptionPane.YES_OPTION){
+                result=db.getRequest("action=Update;to=usercards;set=cardId:"+cardUserNumber.getText()+";userId="+userId);
+                if(result.get("response").equals("True")) {
+                    JOptionPane.showMessageDialog(rootPane, "Sikeres kártya társítása!","Info",JOptionPane.INFORMATION_MESSAGE);
+                    cardUser.setText("");
+                    cardUserNumber.setText("");
+                }
+            }
+        }else{
+            result = db.getRequest("action=Insert;to=usercards(userId,cardId);values="+String.format("VALUES(%s,%s)",userId,cardUserNumber.getText()) );
+            if(result.get("response").equals("True")){
+                JOptionPane.showMessageDialog(rootPane, "Sikeres kártya társítása!","Info",JOptionPane.INFORMATION_MESSAGE);
+                cardUser.setText("");
+                cardUserNumber.setText("");
+            }
+        }
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -886,9 +963,12 @@ public class Gui extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser borrowDate;
     private javax.swing.JTextField borrowStockNum;
     private javax.swing.JTextField borrowStockNumBack;
+    private javax.swing.JTextField cardUser;
+    private javax.swing.JTextField cardUserNumber;
     private javax.swing.JLabel displayName;
     private javax.swing.JButton fileChooserButtonNew;
     private javax.swing.JTextField fileChooserStringNew;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
@@ -902,6 +982,8 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
