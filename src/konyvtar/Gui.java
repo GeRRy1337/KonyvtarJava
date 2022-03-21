@@ -60,6 +60,10 @@ public class Gui extends javax.swing.JFrame {
             borrowDate.setEnabled(true);
         else
             borrowDate.setEnabled(false);
+        if (panel==cardManager)
+            newCardDate.setEnabled(true);
+        else
+            newCardDate.setEnabled(false);
         mainPanel.moveToFront(panel);
         mainPanel.revalidate();
         mainPanel.repaint();
