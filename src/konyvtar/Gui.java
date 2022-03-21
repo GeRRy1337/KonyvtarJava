@@ -1,7 +1,10 @@
 package konyvtar;
-
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.Barcode.*;
 import java.io.File;
-import java.sql.ResultSet;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -93,6 +96,26 @@ public class Gui extends javax.swing.JFrame {
             uploadBookAuthor.setText("");
         }
     }
+
+    public boolean CheckNewCards(){
+        if(newCardName.getText().equals("")){
+            JOptionPane.showMessageDialog(rootPane,"Nem adtál meg nevet.","Hiba",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(newCardAddress.getText().equals("")){
+            JOptionPane.showMessageDialog(rootPane,"Nem adtál meg lakcímet.","Hiba",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(newCardPhone.getText().equals("")){
+            JOptionPane.showMessageDialog(rootPane,"Nem adtál meg telefonszámot.","Hiba",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(newCardDate.getDate()==null){
+            JOptionPane.showMessageDialog(rootPane,"Nem adtál meg születési dátumot.","Hiba",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -149,17 +172,25 @@ public class Gui extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         fileChooserButtonNew = new javax.swing.JButton();
         fileChooserStringNew = new javax.swing.JTextField();
-        userManager = new javax.swing.JPanel();
+        cardManager = new javax.swing.JPanel();
         jSeparator4 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        newCardName = new javax.swing.JTextField();
         jLabel22 = new javax.swing.JLabel();
         cardUser = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
         cardUserNumber = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jLabel24 = new javax.swing.JLabel();
+        newCardAddress = new javax.swing.JTextField();
+        jLabel25 = new javax.swing.JLabel();
+        newCardPhone = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        newCardDate = new com.toedter.calendar.JDateChooser();
+        jButton2 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Main");
@@ -182,7 +213,7 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Felhasználók kezelése");
+        jButton3.setText("Kártyák kezelése");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -202,7 +233,7 @@ public class Gui extends javax.swing.JFrame {
             MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MenuPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
                 .addGap(180, 180, 180)
                 .addComponent(borrowButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -369,7 +400,7 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
                     .addComponent(borrowDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(UpBorrow)
                     .addComponent(borrowBackButton))
@@ -541,14 +572,14 @@ public class Gui extends javax.swing.JFrame {
         jSeparator4.setForeground(new java.awt.Color(102, 102, 255));
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jLabel19.setText("Admin engedély hozzáadása");
+        jLabel19.setText("Új kártya kiállítása");
 
         jLabel20.setText("Kártya felhasználóhoz rendelése");
         jLabel20.setToolTipText("");
 
-        jLabel21.setText("Felhasználónév");
+        jLabel21.setText("Név:");
 
-        jTextField2.setText("jTextField1");
+        newCardName.setText("jTextField1");
 
         jLabel22.setText("Felhasználónév");
 
@@ -561,70 +592,126 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout userManagerLayout = new javax.swing.GroupLayout(userManager);
-        userManager.setLayout(userManagerLayout);
-        userManagerLayout.setHorizontalGroup(
-            userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(userManagerLayout.createSequentialGroup()
+        jLabel24.setText("Lakcím:");
+
+        newCardAddress.setText("jTextField1");
+
+        jLabel25.setText("Telefonszám:");
+
+        newCardPhone.setText("jTextField1");
+
+        jLabel16.setText("Születési dátum:");
+
+        newCardDate.setMaxSelectableDate(new Date());
+
+        jButton2.setText("Előnézet");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Mentés");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout cardManagerLayout = new javax.swing.GroupLayout(cardManager);
+        cardManager.setLayout(cardManagerLayout);
+        cardManagerLayout.setHorizontalGroup(
+            cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardManagerLayout.createSequentialGroup()
                 .addGap(71, 71, 71)
                 .addComponent(jLabel19)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 264, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 313, Short.MAX_VALUE)
                 .addComponent(jLabel20)
                 .addGap(112, 112, 112))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, userManagerLayout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel21)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(cardManagerLayout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(cardManagerLayout.createSequentialGroup()
+                        .addComponent(jLabel24)
+                        .addGap(18, 18, 18)
+                        .addComponent(newCardAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(cardManagerLayout.createSequentialGroup()
+                        .addComponent(jLabel21)
+                        .addGap(18, 18, 18)
+                        .addComponent(newCardName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(cardManagerLayout.createSequentialGroup()
+                        .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel16)
+                            .addComponent(jLabel25)
+                            .addComponent(jButton2))
+                        .addGap(18, 18, 18)
+                        .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(newCardPhone, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                            .addComponent(newCardDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton5))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(jLabel23)
                     .addComponent(cardUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel22)
                     .addComponent(cardUser, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(120, 120, 120))
-            .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(userManagerLayout.createSequentialGroup()
+            .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(cardManagerLayout.createSequentialGroup()
                     .addGap(0, 362, Short.MAX_VALUE)
                     .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 362, Short.MAX_VALUE)))
         );
-        userManagerLayout.setVerticalGroup(
-            userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(userManagerLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        cardManagerLayout.setVerticalGroup(
+            cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardManagerLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel19)
                     .addComponent(jLabel20))
-                .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(userManagerLayout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addComponent(jLabel21)
+                .addGap(18, 18, 18)
+                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel21)
+                    .addComponent(newCardName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(5, 5, 5)
+                .addComponent(jLabel22)
+                .addGap(18, 18, 18)
+                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cardUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel24)
+                    .addComponent(newCardAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(26, 26, 26)
+                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(cardManagerLayout.createSequentialGroup()
+                        .addComponent(jLabel23)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(userManagerLayout.createSequentialGroup()
-                        .addGap(43, 43, 43)
-                        .addComponent(jLabel22)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cardUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(15, 15, 15)
-                .addComponent(jLabel23)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cardUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(47, 47, 47)
-                .addComponent(jButton1)
-                .addContainerGap(54, Short.MAX_VALUE))
-            .addGroup(userManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(userManagerLayout.createSequentialGroup()
+                        .addComponent(cardUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(jButton1))
+                    .addGroup(cardManagerLayout.createSequentialGroup()
+                        .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel25)
+                            .addComponent(newCardPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel16)
+                            .addComponent(newCardDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton5))
+                .addGap(36, 36, 36))
+            .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(cardManagerLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jSeparator4, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
         mainPanel.setLayer(borrow, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainPanel.setLayer(uploadBook, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        mainPanel.setLayer(userManager, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        mainPanel.setLayer(cardManager, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -636,7 +723,7 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(userManager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(cardManager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -644,7 +731,7 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(uploadBook, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(userManager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(cardManager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -874,7 +961,7 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_borrowBackButtonActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        switchPanel(userManager);
+        switchPanel(cardManager);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -917,6 +1004,45 @@ public class Gui extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        if(CheckNewCards()){
+            JFileChooser savePath=new JFileChooser();
+            savePath.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int retval=savePath.showSaveDialog(this);
+            if(retval==JFileChooser.APPROVE_OPTION){
+                try{
+                    Document writePdf=new Document();
+                    PdfWriter writer = PdfWriter.getInstance(writePdf, new FileOutputStream(savePath.getSelectedFile()+"/0.pdf"));
+                    writePdf.open();
+                    PdfPTable table =new PdfPTable(4);
+                    table.addCell(String.format("Név: %s\nLakcím: %s\n",newCardName.getText(),newCardAddress.getText()));
+                    BarcodeEAN barcode = new BarcodeEAN();
+                    barcode.setCodeType(Barcode.EAN8);
+                    barcode.setCode("0000");
+                    PdfPCell cell = new PdfPCell(barcode.createImageWithBarcode(writer.getDirectContent(), BaseColor.BLACK, BaseColor.GRAY), true);
+                    cell.setPadding(10);
+                    table.addCell(cell);
+                    writePdf.close();
+                }catch(Exception e){
+                    System.err.println(e);
+                }
+            }
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    public static PdfPCell createBarcode(PdfWriter writer, String code) throws DocumentException, IOException {
+        BarcodeEAN barcode = new BarcodeEAN();
+        barcode.setCodeType(Barcode.EAN8);
+        barcode.setCode(code);
+        PdfPCell cell = new PdfPCell(barcode.createImageWithBarcode(writer.getDirectContent(), BaseColor.BLACK, BaseColor.GRAY), true);
+        cell.setPadding(10);
+        return cell;
+    }
 
     /**
      * @param args the command line arguments
@@ -963,14 +1089,17 @@ public class Gui extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser borrowDate;
     private javax.swing.JTextField borrowStockNum;
     private javax.swing.JTextField borrowStockNumBack;
+    private javax.swing.JPanel cardManager;
     private javax.swing.JTextField cardUser;
     private javax.swing.JTextField cardUserNumber;
     private javax.swing.JLabel displayName;
     private javax.swing.JButton fileChooserButtonNew;
     private javax.swing.JTextField fileChooserStringNew;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -978,12 +1107,15 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -994,9 +1126,12 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator4;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JLayeredPane mainPanel;
     private javax.swing.JButton newBookButton;
+    private javax.swing.JTextField newCardAddress;
+    private com.toedter.calendar.JDateChooser newCardDate;
+    private javax.swing.JTextField newCardName;
+    private javax.swing.JTextField newCardPhone;
     private javax.swing.JToggleButton scannerCardBorrow;
     private javax.swing.JToggleButton scannerISBNupload;
     private javax.swing.JToggleButton scannerStockNumBorrow;
@@ -1010,7 +1145,6 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton uploadBookSubmit;
     private javax.swing.JTextField uploadBookTitle;
     private com.toedter.calendar.JYearChooser uploadBookYear;
-    private javax.swing.JPanel userManager;
     // End of variables declaration//GEN-END:variables
 
 }
