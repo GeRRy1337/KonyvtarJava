@@ -1,7 +1,6 @@
 package konyvtar;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import com.itextpdf.text.pdf.Barcode.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -118,6 +117,10 @@ public class Gui extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane,"Nem adtál meg születési dátumot.","Hiba",JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        if(newCardPhone.getText().matches("[^0-9]+$")){
+            JOptionPane.showMessageDialog(rootPane,"A telefonszám csak számokat tartalmazhat.","Hiba",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         return true;
     }
     
@@ -195,11 +198,12 @@ public class Gui extends javax.swing.JFrame {
         newCardDate = new com.toedter.calendar.JDateChooser();
         jButton2 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        preview = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Main");
 
-        MenuPanel.setBackground(new java.awt.Color(51, 153, 255));
+        MenuPanel.setBackground(new java.awt.Color(193, 118, 70));
 
         displayName.setText("jLabel1");
 
@@ -237,7 +241,7 @@ public class Gui extends javax.swing.JFrame {
             MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MenuPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
                 .addGap(180, 180, 180)
                 .addComponent(borrowButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -404,7 +408,7 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
                     .addComponent(borrowDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(UpBorrow)
                     .addComponent(borrowBackButton))
@@ -567,7 +571,7 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(jLabel12)
                             .addComponent(fileChooserButtonNew)
                             .addComponent(fileChooserStringNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 86, Short.MAX_VALUE)))
+                        .addGap(0, 123, Short.MAX_VALUE)))
                 .addContainerGap())
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
@@ -583,8 +587,6 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel21.setText("Név:");
 
-        newCardName.setText("jTextField1");
-
         jLabel22.setText("Felhasználónév");
 
         jLabel23.setText("Kártyaszám");
@@ -598,11 +600,7 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel24.setText("Lakcím:");
 
-        newCardAddress.setText("jTextField1");
-
         jLabel25.setText("Telefonszám:");
-
-        newCardPhone.setText("jTextField1");
 
         jLabel16.setText("Születési dátum:");
 
@@ -633,27 +631,36 @@ public class Gui extends javax.swing.JFrame {
                 .addComponent(jLabel20)
                 .addGap(112, 112, 112))
             .addGroup(cardManagerLayout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(cardManagerLayout.createSequentialGroup()
-                        .addComponent(jLabel24)
-                        .addGap(18, 18, 18)
-                        .addComponent(newCardAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(33, 33, 33)
+                        .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(cardManagerLayout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 248, Short.MAX_VALUE))
+                            .addComponent(preview, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(cardManagerLayout.createSequentialGroup()
-                        .addComponent(jLabel21)
-                        .addGap(18, 18, 18)
-                        .addComponent(newCardName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(cardManagerLayout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel25)
-                            .addComponent(jButton2))
-                        .addGap(18, 18, 18)
-                        .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(newCardPhone, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                            .addComponent(newCardDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton5))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(cardManagerLayout.createSequentialGroup()
+                                .addComponent(jLabel24)
+                                .addGap(18, 18, 18)
+                                .addComponent(newCardAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(cardManagerLayout.createSequentialGroup()
+                                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel16)
+                                    .addComponent(jLabel25))
+                                .addGap(18, 18, 18)
+                                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(newCardPhone)
+                                    .addComponent(newCardDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(cardManagerLayout.createSequentialGroup()
+                                .addComponent(jLabel21)
+                                .addGap(18, 18, 18)
+                                .addComponent(newCardName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(jLabel23)
@@ -680,20 +687,19 @@ public class Gui extends javax.swing.JFrame {
                     .addComponent(newCardName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(5, 5, 5)
                 .addComponent(jLabel22)
-                .addGap(18, 18, 18)
-                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cardUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel24)
-                    .addComponent(newCardAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
-                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(cardManagerLayout.createSequentialGroup()
+                        .addComponent(cardUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(26, 26, 26)
                         .addComponent(jLabel23)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cardUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(jButton1))
+                        .addComponent(cardUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(cardManagerLayout.createSequentialGroup()
+                        .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel24)
+                            .addComponent(newCardAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(26, 26, 26)
                         .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel25)
                             .addComponent(newCardPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -701,11 +707,15 @@ public class Gui extends javax.swing.JFrame {
                         .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel16)
                             .addComponent(newCardDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGap(33, 33, 33)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
                     .addComponent(jButton5))
-                .addGap(36, 36, 36))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(preview, javax.swing.GroupLayout.PREFERRED_SIZE, 12, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4))
             .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(cardManagerLayout.createSequentialGroup()
                     .addContainerGap()
@@ -1020,20 +1030,50 @@ public class Gui extends javax.swing.JFrame {
             int retval=savePath.showSaveDialog(this);
             if(retval==JFileChooser.APPROVE_OPTION){
                 try{
-                    Document writePdf=new Document();
-                    PdfWriter writer = PdfWriter.getInstance(writePdf, new FileOutputStream(savePath.getSelectedFile()+"/0.pdf"));
-                    writePdf.open();
-                    PdfPTable table =new PdfPTable(4);
-                    table.addCell(String.format("Név: %s\nLakcím: %s\n",newCardName.getText(),newCardAddress.getText()));
-                    BarcodeEAN barcode = new BarcodeEAN();
-                    barcode.setCodeType(Barcode.EAN8);
-                    barcode.setCode("0000");
-                    PdfPCell cell = new PdfPCell(barcode.createImageWithBarcode(writer.getDirectContent(), BaseColor.BLACK, BaseColor.GRAY), true);
-                    cell.setPadding(10);
-                    table.addCell(cell);
-                    writePdf.close();
+                    dbConnect db=new dbConnect();
+                    SimpleDateFormat sd=new SimpleDateFormat("yyyy-MM-dd");
+                    String birthDate=sd.format(newCardDate.getDate());
+                    Map result = db.getRequest("action=Insert;to=cards(birth,addres,phoneNumber,name);values="+String.format("VALUES('%s', '%s', '%s', '%s')",birthDate,newCardAddress.getText(),newCardPhone.getText(),newCardName.getText()) );
+                    if(result.get("response").equals("True")){
+                        Document writePdf=new Document();
+                        PdfWriter writer = PdfWriter.getInstance(writePdf, new FileOutputStream(savePath.getSelectedFile()+"/"+newCardName.getText()+"_"+String.valueOf(result.get("id"))+".pdf"));
+                        writePdf.open();
+                        PdfPTable table =new PdfPTable(1);
+                        PdfPCell cell = new PdfPCell();
+                        Paragraph olvasojegy=new Paragraph("Ólvasójegy");
+                        olvasojegy.setFont(new Font(Font.FontFamily.UNDEFINED,20));
+                        olvasojegy.setSpacingAfter(5f);
+                        olvasojegy.setAlignment(Element.ALIGN_CENTER);
+                        cell.addElement(olvasojegy);
+                        Paragraph adatok=new Paragraph(String.format("Név: %s\nLakcím: %s\n",newCardName.getText(),newCardAddress.getText()));
+                        adatok.setSpacingAfter(10f);
+                        cell.addElement(adatok);
+                        BarcodeEAN barcode = new BarcodeEAN();
+                        barcode.setCodeType(Barcode.EAN8);
+                        String code=String.valueOf(result.get("id"));
+                        for(int i=code.length();i<8;i++){
+                            code="0"+code;
+                        }
+                        barcode.setCode(code);
+                        barcode.setGuardBars(false);
+                        barcode.setBarHeight(8f);
+                        barcode.setSize(5f);
+                        var img=barcode.createImageWithBarcode(writer.getDirectContent(), BaseColor.BLACK, BaseColor.GRAY);
+                        img.setWidthPercentage(60f);
+                        img.setAlignment(Element.ALIGN_CENTER);
+                        cell.addElement(img);
+                        cell.setPadding(50);
+                        table.addCell(cell);
+                        writePdf.add(table);
+                        writePdf.close();
+                        JOptionPane.showMessageDialog(rootPane, "Sikeres kártya feltöltés!","Info",JOptionPane.INFORMATION_MESSAGE);
+                        newCardName.setText("");
+                        newCardPhone.setText("");
+                        newCardAddress.setText("");
+                        newCardDate.setDate(null);
+                    }
                 }catch(Exception e){
-                    System.err.println(e);
+                    e.printStackTrace();
                 }
             }
         }
@@ -1136,6 +1176,7 @@ public class Gui extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser newCardDate;
     private javax.swing.JTextField newCardName;
     private javax.swing.JTextField newCardPhone;
+    private javax.swing.JLabel preview;
     private javax.swing.JToggleButton scannerCardBorrow;
     private javax.swing.JToggleButton scannerISBNupload;
     private javax.swing.JToggleButton scannerStockNumBorrow;
