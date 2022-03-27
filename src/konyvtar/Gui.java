@@ -1,6 +1,7 @@
 package konyvtar;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import java.awt.Component;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,7 +11,6 @@ import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 
 
 /**
@@ -60,18 +60,40 @@ public class Gui extends javax.swing.JFrame {
     
     private void logout(){
         user.setLogin(false);
+        switchPanel(borrow);
         checkLogin();
     }
     
     private void switchPanel(javax.swing.JPanel panel){
-        if (panel==borrow)
-            borrowDate.setEnabled(true);
-        else
-            borrowDate.setEnabled(false);
-        if (panel==cardManager)
-            newCardDate.setEnabled(true);
-        else
-            newCardDate.setEnabled(false);
+        if (panel==adminPanel){
+            user.updatePermission();
+            if(user.getPermission()<2){
+                adminButton.setEnabled(false);
+                adminButton.setVisible(false);
+                switchPanel(borrow);
+                return;
+            }else{
+                adminButton.setEnabled(true);
+                adminButton.setVisible(true);
+                updateAdmins();
+                updateUsers();
+            }
+        }
+        for(Component c : borrow.getComponents()){
+            c.setEnabled(false);
+        }
+        for(Component c : uploadBook.getComponents()){
+            c.setEnabled(false);
+        }
+        for(Component c : cardManager.getComponents()){
+            c.setEnabled(false);
+        }
+        for(Component c : adminPanel.getComponents()){
+            c.setEnabled(false);
+        }
+        for(Component c : panel.getComponents()){
+            c.setEnabled(true);
+        }
         mainPanel.moveToFront(panel);
         mainPanel.revalidate();
         mainPanel.repaint();
@@ -109,6 +131,46 @@ public class Gui extends javax.swing.JFrame {
         }
     }
 
+    public void updateAdmins(){
+        dbConnect db=new dbConnect();
+        Map result = db.getRequest("action=adminList");
+        if(result.get("response").equals("True")){
+            adminRemoveUser.removeAllItems();
+            String response=String.valueOf(result.get("users")).replace("\"", "");
+            String users[]=response.substring(1, response.length()-1).split(",");
+            for(String s:users){
+                adminRemoveUser.addItem(s);
+            }
+        }
+    }
+    
+    public void updateUsers(){
+        dbConnect db=new dbConnect();
+        Map result = db.getRequest("action=userList");
+        if(result.get("response").equals("True")){
+            adminAddUser.removeAllItems();
+            String response=String.valueOf(result.get("users")).replace("\"", "");
+            String users[]=response.substring(1, response.length()-1).split(",");
+            for(String s:users){
+                adminAddUser.addItem(s);
+            }
+        }
+    }
+    
+    public void updateCurrentPermission(){
+        dbConnect db=new dbConnect();
+        Map result = db.getRequest("action=getPermission;username="+adminRemoveUser.getSelectedItem());
+        if(result.get("response").equals("True")){
+            if(result.get("permission").equals("1")){
+                currentPermission.setText("Könyvtáros");
+            }else if(result.get("permission").equals("2")){
+                currentPermission.setText("Rendszergazda");
+            }else{
+                currentPermission.setText("Ismeretlen");
+            }
+        }
+    }
+    
     public boolean CheckNewCards(){
         if(newCardName.getText().equals("")){
             JOptionPane.showMessageDialog(rootPane,"Nem adtál meg nevet.","Hiba",JOptionPane.ERROR_MESSAGE);
@@ -210,6 +272,22 @@ public class Gui extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         preview = new javax.swing.JLabel();
+        adminPanel = new javax.swing.JPanel();
+        jSeparator5 = new javax.swing.JSeparator();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel33 = new javax.swing.JLabel();
+        adminAddUser = new javax.swing.JComboBox<>();
+        jLabel34 = new javax.swing.JLabel();
+        adminAddPermission = new javax.swing.JComboBox<>();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        adminRemoveUser = new javax.swing.JComboBox<>();
+        jLabel37 = new javax.swing.JLabel();
+        adminRemovePermission = new javax.swing.JComboBox<>();
+        jLabel17 = new javax.swing.JLabel();
+        currentPermission = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
 
         jButton6.setText("jButton6");
 
@@ -249,6 +327,11 @@ public class Gui extends javax.swing.JFrame {
         });
 
         adminButton.setText("Adminok");
+        adminButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adminButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout MenuPanelLayout = new javax.swing.GroupLayout(MenuPanel);
         MenuPanel.setLayout(MenuPanelLayout);
@@ -256,7 +339,7 @@ public class Gui extends javax.swing.JFrame {
             MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MenuPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
                 .addGap(101, 101, 101)
                 .addComponent(borrowButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -370,7 +453,7 @@ public class Gui extends javax.swing.JFrame {
                                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(borrowLayout.createSequentialGroup()
                                         .addComponent(scannerStockNumBorrow)
-                                        .addContainerGap(425, Short.MAX_VALUE))
+                                        .addContainerGap(439, Short.MAX_VALUE))
                                     .addGroup(borrowLayout.createSequentialGroup()
                                         .addComponent(scannerCardBorrow)
                                         .addGap(53, 53, 53)
@@ -426,7 +509,7 @@ public class Gui extends javax.swing.JFrame {
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
                     .addComponent(borrowDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(UpBorrow)
                     .addComponent(borrowBackButton))
@@ -740,9 +823,151 @@ public class Gui extends javax.swing.JFrame {
                     .addContainerGap()))
         );
 
+        jSeparator5.setBackground(new java.awt.Color(102, 102, 255));
+        jSeparator5.setForeground(new java.awt.Color(102, 102, 255));
+        jSeparator5.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+        jLabel18.setText("Admin hozzáadása");
+
+        jLabel33.setText("Admin törlése/módosítása");
+
+        jLabel34.setText("Felhasználónév:");
+
+        adminAddPermission.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Könyvtáros", "Rendszergazda" }));
+
+        jLabel35.setText("Engedély szint:");
+
+        jLabel36.setText("Felhasználónév:");
+
+        adminRemoveUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adminRemoveUserActionPerformed(evt);
+            }
+        });
+
+        jLabel37.setText("Engedély szint:");
+
+        adminRemovePermission.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Könyvtáros", "Rendszergazda", "Törlés" }));
+        adminRemovePermission.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                adminRemovePermissionActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("Jelenlegi engedély szint:");
+
+        jButton7.setText("Hozzáadás");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        jButton8.setText("Törlés/ módosítás");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout adminPanelLayout = new javax.swing.GroupLayout(adminPanel);
+        adminPanel.setLayout(adminPanelLayout);
+        adminPanelLayout.setHorizontalGroup(
+            adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(adminPanelLayout.createSequentialGroup()
+                .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(adminPanelLayout.createSequentialGroup()
+                        .addGap(114, 114, 114)
+                        .addComponent(jLabel18))
+                    .addGroup(adminPanelLayout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(adminPanelLayout.createSequentialGroup()
+                                .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel34)
+                                    .addComponent(jLabel35))
+                                .addGap(18, 18, 18)
+                                .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(adminAddUser, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(adminAddPermission, 0, 174, Short.MAX_VALUE)))
+                            .addComponent(jButton7))))
+                .addGap(67, 67, 67)
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(adminPanelLayout.createSequentialGroup()
+                        .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(adminPanelLayout.createSequentialGroup()
+                                .addGap(141, 141, 141)
+                                .addComponent(jLabel33))
+                            .addGroup(adminPanelLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(adminPanelLayout.createSequentialGroup()
+                                        .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel36)
+                                            .addComponent(jLabel37))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(adminRemovePermission, 0, 174, Short.MAX_VALUE)
+                                            .addComponent(adminRemoveUser, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addGroup(adminPanelLayout.createSequentialGroup()
+                                        .addComponent(jLabel17)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(currentPermission, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                        .addGap(0, 96, Short.MAX_VALUE))
+                    .addGroup(adminPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton8)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+        );
+        adminPanelLayout.setVerticalGroup(
+            adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(adminPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator5, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                    .addGroup(adminPanelLayout.createSequentialGroup()
+                        .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel18)
+                            .addComponent(jLabel33))
+                        .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(adminPanelLayout.createSequentialGroup()
+                                .addGap(43, 43, 43)
+                                .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel34)
+                                    .addComponent(adminAddUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(34, 34, 34)
+                                .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(adminAddPermission, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel35)))
+                            .addGroup(adminPanelLayout.createSequentialGroup()
+                                .addGap(44, 44, 44)
+                                .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel36)
+                                    .addComponent(adminRemoveUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(30, 30, 30)
+                                .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(adminRemovePermission, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel37))))
+                        .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(adminPanelLayout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel17)
+                                    .addComponent(currentPermission, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(35, 35, 35)
+                                .addComponent(jButton8))
+                            .addGroup(adminPanelLayout.createSequentialGroup()
+                                .addGap(89, 89, 89)
+                                .addComponent(jButton7)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
         mainPanel.setLayer(borrow, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainPanel.setLayer(uploadBook, javax.swing.JLayeredPane.DEFAULT_LAYER);
         mainPanel.setLayer(cardManager, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        mainPanel.setLayer(adminPanel, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -753,8 +978,13 @@ public class Gui extends javax.swing.JFrame {
                 .addComponent(uploadBook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
-                    .addContainerGap()
+                    .addGap(0, 0, 0)
                     .addComponent(cardManager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createSequentialGroup()
+                    .addGap(0, 0, 0)
+                    .addComponent(adminPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE)
+                    .addGap(0, 0, 0)))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -763,6 +993,11 @@ public class Gui extends javax.swing.JFrame {
                 .addComponent(uploadBook, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(cardManager, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainPanelLayout.createSequentialGroup()
+                    .addGap(0, 0, 0)
+                    .addComponent(adminPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGap(0, 0, 0)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1096,6 +1331,50 @@ public class Gui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void adminButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminButtonActionPerformed
+        switchPanel(adminPanel);
+    }//GEN-LAST:event_adminButtonActionPerformed
+
+    private void adminRemovePermissionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminRemovePermissionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_adminRemovePermissionActionPerformed
+
+    private void adminRemoveUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adminRemoveUserActionPerformed
+       updateCurrentPermission();
+    }//GEN-LAST:event_adminRemoveUserActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        dbConnect db= new dbConnect();
+        Map result=db.getRequest("action=Select;from=users;username='"+adminAddUser.getSelectedItem()+"'");
+        if(result.get("response").equals("True")){
+            result = db.getRequest("action=Insert;to=admins(id,permission);values="+String.format("VALUES( %s, %s)",result.get("id"),(adminAddPermission.getSelectedIndex()+1) ));
+            if(result.get("response").equals("True")){
+                JOptionPane.showMessageDialog(rootPane, "Sikeres admin beállítás!","Info",JOptionPane.INFORMATION_MESSAGE);
+            }
+            updateAdmins();
+            updateUsers();
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        dbConnect db= new dbConnect();
+        Map result=db.getRequest("action=Select;from=users;username='"+adminRemoveUser.getSelectedItem()+"'");
+        if(result.get("response").equals("True")){
+            if(adminRemovePermission.getSelectedIndex()!=2){
+                result = db.getRequest("action=Update;to=admins;set=permission:"+(adminRemovePermission.getSelectedIndex()+1)+";id="+result.get("id"));
+                if(result.get("response").equals("True")){
+                    JOptionPane.showMessageDialog(rootPane, "Sikeres engedély szint változtatás!","Info",JOptionPane.INFORMATION_MESSAGE);
+                }
+            }else{
+                result = db.getRequest("action=Delete;from=admins;id="+result.get("id"));
+                if(result.get("response").equals("True")){
+                    JOptionPane.showMessageDialog(rootPane, "Sikeres törlés!","Info",JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+            switchPanel(adminPanel);
+        }
+    }//GEN-LAST:event_jButton8ActionPerformed
+
     public static PdfPCell createBarcode(PdfWriter writer, String code) throws DocumentException, IOException {
         BarcodeEAN barcode = new BarcodeEAN();
         barcode.setCodeType(Barcode.EAN8);
@@ -1144,7 +1423,12 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JTextField CardNumber;
     private javax.swing.JPanel MenuPanel;
     private javax.swing.JButton UpBorrow;
+    private javax.swing.JComboBox<String> adminAddPermission;
+    private javax.swing.JComboBox<String> adminAddUser;
     private javax.swing.JButton adminButton;
+    private javax.swing.JPanel adminPanel;
+    private javax.swing.JComboBox<String> adminRemovePermission;
+    private javax.swing.JComboBox<String> adminRemoveUser;
     private javax.swing.JPanel borrow;
     private javax.swing.JButton borrowBackButton;
     private javax.swing.JButton borrowButton;
@@ -1154,6 +1438,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JPanel cardManager;
     private javax.swing.JTextField cardUser;
     private javax.swing.JTextField cardUserNumber;
+    private javax.swing.JLabel currentPermission;
     private javax.swing.JLabel displayName;
     private javax.swing.JButton fileChooserButtonNew;
     private javax.swing.JTextField fileChooserStringNew;
@@ -1163,6 +1448,8 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1171,6 +1458,8 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
@@ -1180,6 +1469,11 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1189,6 +1483,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
     private javax.swing.JLayeredPane mainPanel;
     private javax.swing.JButton newBookButton;
     private javax.swing.JTextField newCardAddress;

@@ -34,6 +34,15 @@ public class User {
         return this.username;
     }
     
+    public void updatePermission(){
+        dbConnect db=new dbConnect();
+        Map result=db.getRequest("action=getPermission;username="+this.username);
+        if(result.get("response").equals("True")){
+            this.permission=Integer.parseInt( String.valueOf( result.get("permission") ) );
+        }else{
+            this.permission=0;
+        }
+    }
     
     public void setLogin(boolean newValue){
         this.login=newValue;
