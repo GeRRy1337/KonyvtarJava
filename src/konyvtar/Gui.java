@@ -34,15 +34,24 @@ public class Gui extends javax.swing.JFrame {
             return true;
         }else{
             setDisplayName(user.getUsername());
+            if(user.getPermission()<2){
+                adminButton.setEnabled(false);
+                adminButton.setVisible(false);
+            }else{
+                adminButton.setEnabled(true);
+                adminButton.setVisible(true);
+            }
         }
         return false;
     }
 
-    protected void returnLogin(int id){
+    protected void returnLogin(int id, int permission){
         this.setVisible(true);
         user.setLogin(true);
         user.setId(id);
-        setDisplayName(user.getUsername());
+        user.setPermission(permission);
+        //setDisplayName(user.getUsername());
+        checkLogin();
     }
     
     private void setDisplayName(String newName){
@@ -133,12 +142,14 @@ public class Gui extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton6 = new javax.swing.JButton();
         MenuPanel = new javax.swing.JPanel();
         displayName = new javax.swing.JLabel();
         borrowButton = new javax.swing.JButton();
         newBookButton = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        adminButton = new javax.swing.JButton();
         mainPanel = new javax.swing.JLayeredPane();
         borrow = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -200,6 +211,8 @@ public class Gui extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         preview = new javax.swing.JLabel();
 
+        jButton6.setText("jButton6");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Main");
 
@@ -235,19 +248,23 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        adminButton.setText("Adminok");
+
         javax.swing.GroupLayout MenuPanelLayout = new javax.swing.GroupLayout(MenuPanel);
         MenuPanel.setLayout(MenuPanelLayout);
         MenuPanelLayout.setHorizontalGroup(
             MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MenuPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-                .addGap(180, 180, 180)
+                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                .addGap(101, 101, 101)
                 .addComponent(borrowButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(newBookButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(adminButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
                 .addGap(20, 20, 20))
@@ -261,7 +278,8 @@ public class Gui extends javax.swing.JFrame {
                     .addComponent(borrowButton)
                     .addComponent(newBookButton)
                     .addComponent(jButton3)
-                    .addComponent(jButton4))
+                    .addComponent(jButton4)
+                    .addComponent(adminButton))
                 .addContainerGap())
         );
 
@@ -638,8 +656,7 @@ public class Gui extends javax.swing.JFrame {
                             .addGroup(cardManagerLayout.createSequentialGroup()
                                 .addComponent(jButton2)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 248, Short.MAX_VALUE))
+                                .addComponent(jButton5))
                             .addComponent(preview, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(cardManagerLayout.createSequentialGroup()
                         .addContainerGap()
@@ -659,8 +676,8 @@ public class Gui extends javax.swing.JFrame {
                             .addGroup(cardManagerLayout.createSequentialGroup()
                                 .addComponent(jLabel21)
                                 .addGap(18, 18, 18)
-                                .addComponent(newCardName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(newCardName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(jLabel23)
@@ -1127,6 +1144,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JTextField CardNumber;
     private javax.swing.JPanel MenuPanel;
     private javax.swing.JButton UpBorrow;
+    private javax.swing.JButton adminButton;
     private javax.swing.JPanel borrow;
     private javax.swing.JButton borrowBackButton;
     private javax.swing.JButton borrowButton;
@@ -1144,6 +1162,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

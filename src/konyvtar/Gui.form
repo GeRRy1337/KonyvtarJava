@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.9" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.JButton" name="jButton6">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jButton6"/>
+      </Properties>
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
     <Property name="title" type="java.lang.String" value="Main"/>
@@ -56,13 +63,15 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Component id="displayName" pref="166" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="180" max="-2" attributes="0"/>
+                  <Component id="displayName" pref="172" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="101" max="-2" attributes="0"/>
                   <Component id="borrowButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="newBookButton" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="adminButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
@@ -79,6 +88,7 @@
                       <Component id="newBookButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jButton4" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="adminButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -122,6 +132,11 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="adminButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Adminok"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
@@ -641,7 +656,6 @@
                                       <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="jButton5" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace pref="248" max="32767" attributes="0"/>
                                   </Group>
                                   <Component id="preview" min="-2" pref="109" max="-2" attributes="0"/>
                               </Group>
@@ -671,9 +685,9 @@
                                       <Component id="newCardName" min="-2" pref="180" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel23" alignment="0" min="-2" max="-2" attributes="0"/>

@@ -40,14 +40,20 @@ public class Login extends javax.swing.JFrame {
             byte[] digest = md.digest();
             BigInteger bigInt = new BigInteger(1,digest);
             myHash = bigInt.toString(16);
+            for (int i = myHash.length(); i < 32 ; i++) {
+                myHash="0"+myHash;
+            }
         }catch(Exception e){System.err.println(e.getMessage());}
         Map result = sql.getRequest("action=Select;username="+user.getText()+";password="+myHash);
         try{
             if(result.get("response").equals("True")){
-                Main.GuiWindow.returnLogin(Integer.parseInt( String.valueOf(result.get("id")) ));
+                Main.GuiWindow.returnLogin(Integer.parseInt( String.valueOf(result.get("id")) ), Integer.parseInt(String.valueOf(result.get("permission"))) );
                 user.setText("");
                 pass.setText("");
                 this.dispose();
+                return;
+            }else if(result.containsKey("user") && result.get("user").equals("exists")){
+                JOptionPane.showMessageDialog(rootPane, "Nincs megfelelő jogosultságod!","Error",JOptionPane.ERROR_MESSAGE);
                 return;
             }
             JOptionPane.showMessageDialog(rootPane, "Hibás bejelentkezés!","Error",JOptionPane.ERROR_MESSAGE);
@@ -84,6 +90,10 @@ public class Login extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 243, 189));
         jPanel1.setToolTipText("");
+
+        pass.setToolTipText("");
+
+        user.setToolTipText("");
 
         submit.setText("Belépés");
         submit.addActionListener(new java.awt.event.ActionListener() {

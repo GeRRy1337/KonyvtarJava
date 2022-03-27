@@ -3,17 +3,21 @@ package konyvtar;
 import java.util.Map;
 
 public class User {
-    private int id;
+    private int id, permission;
     private String username;
     private boolean login=false;
     
     public User(){
-        login=false;
-        id=0;
+        this.login=false;
+        this.id=0;
     }
     
     public int getId(){
         return this.id;
+    }
+    
+    public int getPermission(){
+        return this.permission;
     }
     
     public String getUsername(){
@@ -21,25 +25,29 @@ public class User {
         Map result = db.getRequest("action=Select;from=users;id="+this.id);
         try{
             if(result.get("response").equals("True")){
-                username=""+result.get("username");
+                this.username=""+result.get("username");
             }
         }catch(Exception e){
             System.err.println(e.getMessage());
             return "error";
         }
-        return username;
+        return this.username;
     }
     
     
     public void setLogin(boolean newValue){
-        login=newValue;
+        this.login=newValue;
     }
     
     public void setId(int newId){
         this.id=newId;
     }
 
+    public void setPermission(int permission){
+        this.permission=permission;
+    }
+    
     public boolean loginValue(){
-        return login;
+        return this.login;
     }
 }
