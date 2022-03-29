@@ -27,14 +27,6 @@ import org.apache.hc.core5.http.ContentType;
 
 public class dbConnect {
     private String defConn,defRepo;
-    /*private Connection myConn;
-    public dbConnect(){
-        try{
-            myConn= DriverManager.getConnection("jdbc:mysql://localhost:3306/konyvtar","root","");
-        }catch(Exception e){
-            System.err.println(e.getMessage());
-        }
-    }*/
 
     //https://stackoverflow.com/questions/3324717/sending-http-post-request-in-java
 

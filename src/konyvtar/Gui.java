@@ -252,6 +252,8 @@ public class Gui extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         fileChooserButtonNew = new javax.swing.JButton();
         fileChooserStringNew = new javax.swing.JTextField();
+        jButton9 = new javax.swing.JButton();
+        jButton10 = new javax.swing.JButton();
         cardManager = new javax.swing.JPanel();
         jSeparator4 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
@@ -574,20 +576,36 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        jButton9.setText("Törlés");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
+        jButton10.setText("i");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout uploadBookLayout = new javax.swing.GroupLayout(uploadBook);
         uploadBook.setLayout(uploadBookLayout);
         uploadBookLayout.setHorizontalGroup(
             uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(uploadBookLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(uploadBookLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(uploadBookSubmit))
+                        .addComponent(uploadBookSubmit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton9))
                     .addGroup(uploadBookLayout.createSequentialGroup()
-                        .addGap(126, 126, 126)
+                        .addComponent(jButton10)
+                        .addGap(37, 37, 37)
                         .addComponent(jLabel9))
                     .addGroup(uploadBookLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel7))
@@ -636,8 +654,10 @@ public class Gui extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(uploadBookLayout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(48, 48, 48)
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(jButton10))
+                        .addGap(39, 39, 39)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
                             .addComponent(uploadBookISBN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -648,7 +668,9 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(uploadBookStockNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(scannerStockNumUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(uploadBookSubmit))
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(uploadBookSubmit)
+                            .addComponent(jButton9)))
                     .addGroup(uploadBookLayout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addGap(42, 42, 42)
@@ -983,7 +1005,7 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(mainPanelLayout.createSequentialGroup()
                     .addGap(0, 0, 0)
-                    .addComponent(adminPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 763, Short.MAX_VALUE)
+                    .addComponent(adminPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGap(0, 0, 0)))
         );
         mainPanelLayout.setVerticalGroup(
@@ -1375,6 +1397,31 @@ public class Gui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton8ActionPerformed
 
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        if(uploadBookStockNum.getText().equals("")){
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál raktári számot!","Hiba",JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        dbConnect db= new dbConnect();
+        Map result = db.getRequest("action=Delete;from=stock;stockNum="+uploadBookStockNum.getText());
+        if(result.get("response").equals("True")){
+            JOptionPane.showMessageDialog(rootPane, "Sikeres törlés!","Info",JOptionPane.INFORMATION_MESSAGE);
+            uploadBookStockNum.setText("");
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Hiba a törlés közben!","Hiba",JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        String message="Könyv feltöltése vagy törlése\n\n"
+                + "Ha a könyv már korábban megtalálható volt a könyvtárban és csak új példány érkezett belőle az ISBN szám megadásával az adatok automatikusan kitöltődnek.\n"
+                + "ebben az esetben a raktári szám emgadása után a küldés gombra kattintva az új példány felkerül a rendszerbe.\n"
+                + "Amennyiben a könyv korábban nem volt még a könyvtár rendszerében, ISBN és raktári szám melett az adatainak kitöltése is kötelező!\n"
+                + "Ezek megadása után a küldés gombal minden adat felkerül a rendszerbe\n\n"
+                + "Törlés esetén a raktári szám megadása után a Törlés gombra kattintva a példány törölve lessz a rendszerből.";
+        JOptionPane.showMessageDialog(rootPane,message,"Info",JOptionPane.INFORMATION_MESSAGE);
+    }//GEN-LAST:event_jButton10ActionPerformed
+
     public static PdfPCell createBarcode(PdfWriter writer, String code) throws DocumentException, IOException {
         BarcodeEAN barcode = new BarcodeEAN();
         barcode.setCodeType(Barcode.EAN8);
@@ -1443,6 +1490,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton fileChooserButtonNew;
     private javax.swing.JTextField fileChooserStringNew;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -1450,6 +1498,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
