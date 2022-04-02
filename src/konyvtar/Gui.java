@@ -30,6 +30,19 @@ public class Gui extends javax.swing.JFrame {
         initComponents();
     }
 
+    public void loadCategories(){
+        dbConnect db=new dbConnect();
+        Map result=db.getRequest("action=getCategories");
+        if(result.get("response").equals("True")){
+            newCategories.removeAllItems();
+            String response = String.valueOf(result.get("categories")).replace("\"","");
+            String categories[] = response.substring(1, response.length() - 1).split(",");
+            for (String s : categories) {
+                newCategories.addItem(s);
+            }
+        }
+    }
+    
     public boolean checkLogin() {
         if (!user.loginValue()) {
             this.setVisible(false);
@@ -81,6 +94,8 @@ public class Gui extends javax.swing.JFrame {
                 updateAdmins();
                 updateUsers();
             }
+        }else if(panel == uploadBook){
+            loadCategories();
         }
         for (Component c : borrow.getComponents()) {
             c.setEnabled(false);
@@ -192,6 +207,10 @@ public class Gui extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg születési dátumot.", "Hiba", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        if (newCardValid.getDate() == null) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg érvényességi dátumot.", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         if (newCardPhone.getText().matches("[^0-9]+$")) {
             JOptionPane.showMessageDialog(rootPane, "A telefonszám csak számokat tartalmazhat.", "Hiba", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -258,6 +277,11 @@ public class Gui extends javax.swing.JFrame {
         fileChooserStringNew = new javax.swing.JTextField();
         jButton9 = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
+        jLabel29 = new javax.swing.JLabel();
+        newCategories = new javax.swing.JComboBox<>();
+        jButton13 = new javax.swing.JButton();
+        categories = new javax.swing.JLabel();
+        jButton14 = new javax.swing.JButton();
         cardManager = new javax.swing.JPanel();
         jSeparator4 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
@@ -286,6 +310,8 @@ public class Gui extends javax.swing.JFrame {
         cardValidDate = new com.toedter.calendar.JDateChooser();
         jLabel28 = new javax.swing.JLabel();
         jButton12 = new javax.swing.JButton();
+        newCardValid = new com.toedter.calendar.JDateChooser();
+        jLabel30 = new javax.swing.JLabel();
         adminPanel = new javax.swing.JPanel();
         jSeparator5 = new javax.swing.JSeparator();
         jLabel18 = new javax.swing.JLabel();
@@ -589,6 +615,8 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        fileChooserStringNew.setEditable(false);
+
         jButton9.setText("Törlés");
         jButton9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -600,6 +628,22 @@ public class Gui extends javax.swing.JFrame {
         jButton10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton10ActionPerformed(evt);
+            }
+        });
+
+        jLabel29.setText("Kategória");
+
+        jButton13.setText("Hozzáad");
+        jButton13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton13ActionPerformed(evt);
+            }
+        });
+
+        jButton14.setText("Töröl");
+        jButton14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton14ActionPerformed(evt);
             }
         });
 
@@ -634,19 +678,24 @@ public class Gui extends javax.swing.JFrame {
                                 .addComponent(scannerISBNupload)))))
                 .addGap(70, 70, 70)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(uploadBookLayout.createSequentialGroup()
-                        .addGap(133, 133, 133)
-                        .addComponent(jLabel10)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel12)
+                        .addGap(68, 68, 68)
+                        .addComponent(fileChooserStringNew, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(fileChooserButtonNew))
                     .addGroup(uploadBookLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(133, 133, 133)
+                        .addComponent(jLabel10))
+                    .addGroup(uploadBookLayout.createSequentialGroup()
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
                             .addComponent(jLabel3)
                             .addComponent(jLabel11)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel8))
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel29))
                         .addGap(16, 16, 16)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(uploadBookLayout.createSequentialGroup()
@@ -656,10 +705,13 @@ public class Gui extends javax.swing.JFrame {
                                     .addComponent(uploadBookTitle)))
                             .addComponent(uploadBookPublisher)
                             .addComponent(uploadBookYear, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
-                            .addComponent(fileChooserStringNew))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(fileChooserButtonNew)
-                        .addGap(19, 19, 19))))
+                            .addComponent(newCategories, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton14))
+                    .addComponent(categories, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         uploadBookLayout.setVerticalGroup(
             uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -702,12 +754,20 @@ public class Gui extends javax.swing.JFrame {
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel8)
                             .addComponent(uploadBookYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel29)
+                            .addComponent(newCategories, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton13)
+                            .addComponent(jButton14))
+                        .addGap(18, 18, 18)
+                        .addComponent(categories, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel12)
                             .addComponent(fileChooserButtonNew)
                             .addComponent(fileChooserStringNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 123, Short.MAX_VALUE)))
+                        .addGap(0, 145, Short.MAX_VALUE)))
                 .addContainerGap())
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
@@ -778,6 +838,10 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        newCardValid.setMinSelectableDate(new Date());
+
+        jLabel30.setText("Érvényesség:");
+
         javax.swing.GroupLayout cardManagerLayout = new javax.swing.GroupLayout(cardManager);
         cardManager.setLayout(cardManagerLayout);
         cardManagerLayout.setHorizontalGroup(
@@ -801,22 +865,19 @@ public class Gui extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(newCardAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardManagerLayout.createSequentialGroup()
-                                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel16)
-                                    .addComponent(jLabel25))
-                                .addGap(18, 18, 18)
-                                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(newCardPhone)
-                                    .addComponent(newCardDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardManagerLayout.createSequentialGroup()
                                 .addComponent(jLabel21)
                                 .addGap(18, 18, 18)
                                 .addComponent(newCardName, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardManagerLayout.createSequentialGroup()
-                                .addComponent(jButton2)
+                                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel16)
+                                    .addComponent(jLabel25))
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton5)
-                                .addGap(119, 119, 119)))
+                                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(newCardValid, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(newCardPhone)
+                                        .addComponent(newCardDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
                         .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel22)
@@ -826,15 +887,13 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(cardUserNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(112, 112, 112))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardManagerLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardManagerLayout.createSequentialGroup()
-                        .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardManagerLayout.createSequentialGroup()
-                        .addComponent(jLabel26)
-                        .addGap(155, 155, 155))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardManagerLayout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(cardManagerLayout.createSequentialGroup()
                                 .addComponent(jButton11)
@@ -844,7 +903,17 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(jLabel27)
                             .addComponent(cardValidNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cardValidDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(85, 85, 85))))
+                        .addGap(85, 85, 85))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardManagerLayout.createSequentialGroup()
+                        .addComponent(jLabel30)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardManagerLayout.createSequentialGroup()
+                                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardManagerLayout.createSequentialGroup()
+                                .addComponent(jLabel26)
+                                .addGap(155, 155, 155))))))
             .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(cardManagerLayout.createSequentialGroup()
                     .addGap(0, 355, Short.MAX_VALUE)
@@ -890,19 +959,23 @@ public class Gui extends javax.swing.JFrame {
                         .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel16)
                             .addComponent(newCardDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(41, 41, 41))
-                    .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2)
-                        .addComponent(jButton5)))
+                        .addGap(18, 18, 18)
+                        .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel30)
+                            .addComponent(newCardValid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(9, 9, 9)))
                 .addGap(18, 18, 18)
-                .addComponent(jLabel27)
+                .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel27)
+                    .addComponent(jButton2)
+                    .addComponent(jButton5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cardValidNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel28)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cardValidDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton11)
                     .addComponent(jButton12))
@@ -1261,6 +1334,14 @@ public class Gui extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadási dátumot!", "Hiba", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                if (fileChooserStringNew.getText().equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem választottál ki borító képet!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (categories.getText().equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kategóriá(ka)t!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 Map authorId = db.getRequest("action=Select;from=author;name=" + uploadBookAuthor.getText());
                 if (authorId.get("response").equals("True")) {
                     result = db.getRequest("action=Insert;img=" + fileChooserStringNew.getText() + ";to=books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL);values=" + String.format("VALUES( %s, '%s', %s, '%s', '%s', blank )", uploadBookISBN.getText(), uploadBookTitle.getText(), authorId.get("id"), uploadBookYear.getYear(), uploadBookPublisher.getText()));
@@ -1274,7 +1355,8 @@ public class Gui extends javax.swing.JFrame {
                         }
                     }
                 } else {
-                    result = db.getRequest("action=Insert;to=author(name,birthDate);values=" + String.format("VALUES('%s','0')", uploadBookAuthor.getText()));
+                    String birthDate=JOptionPane.showInputDialog(rootPane, "Kérlek add meg az író születési dátumát", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    result = db.getRequest("action=Insert;to=author(name,birthDate);values=" + String.format("VALUES('%s','%s')", uploadBookAuthor.getText(),birthDate));
                     if (result.get("response").equals("True")) {
                         authorId = db.getRequest("action=Select;from=author;name=" + uploadBookAuthor.getText());
                         if (authorId.get("response").equals("True")) {
@@ -1291,6 +1373,17 @@ public class Gui extends javax.swing.JFrame {
                         }
                     }
                 }
+                Map bookId = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
+                if (bookId.get("response").equals("True")) {
+                    String categoryupload[]=categories.getText().split(";");
+                    for(int i=0;i<categoryupload.length;i++){
+                        if(!categoryupload[i].equals("")){
+                            String sql=("action=Insert;to=categoryconn(bookId,categoryId);values="+String.format("VALUES(%s, (Select category_id from categories where category_name like '%s' ) )",bookId.get("id"), categoryupload[i] ) );
+                            result=db.getRequest(sql);
+                        }
+                    }
+                }
+                
             }
             uploadBookYear.setYear(1);
             uploadBookAuthor.setText("");
@@ -1299,6 +1392,7 @@ public class Gui extends javax.swing.JFrame {
             uploadBookISBN.setText("");
             uploadBookStockNum.setText("");
             fileChooserStringNew.setText("");
+            categories.setText("");
         } catch (Exception e) {
             System.err.println(e.getMessage());
             JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Hiba", JOptionPane.ERROR_MESSAGE);
@@ -1388,14 +1482,14 @@ public class Gui extends javax.swing.JFrame {
                     dbConnect db = new dbConnect();
                     SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
                     String birthDate = sd.format(newCardDate.getDate());
-                    Map result = db.getRequest("action=Insert;to=cards(birth,addres,phoneNumber,name);values=" + String.format("VALUES('%s', '%s', '%s', '%s')", birthDate, newCardAddress.getText(), newCardPhone.getText(), newCardName.getText()));
+                    Map result = db.getRequest("action=Insert;to=cards(birth,addres,phoneNumber,name,valid);values=" + String.format("VALUES('%s', '%s', '%s', '%s', '%s')", birthDate, newCardAddress.getText(), newCardPhone.getText(), newCardName.getText(), sd.format(newCardValid.getDate())));
                     if (result.get("response").equals("True")) {
                         Document writePdf = new Document();
                         PdfWriter writer = PdfWriter.getInstance(writePdf, new FileOutputStream(savePath.getSelectedFile() + "/" + newCardName.getText() + "_" + String.valueOf(result.get("id")) + ".pdf"));
                         writePdf.open();
                         PdfPTable table = new PdfPTable(1);
                         PdfPCell cell = new PdfPCell();
-                        Paragraph olvasojegy = new Paragraph("Ólvasójegy");
+                        Paragraph olvasojegy = new Paragraph("Olvasójegy");
                         olvasojegy.setFont(new Font(Font.FontFamily.UNDEFINED, 20));
                         olvasojegy.setSpacingAfter(5f);
                         olvasojegy.setAlignment(Element.ALIGN_CENTER);
@@ -1532,6 +1626,23 @@ public class Gui extends javax.swing.JFrame {
         new cards().setVisible(true);
     }//GEN-LAST:event_jButton12ActionPerformed
 
+    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+        if(categories.getText().contains(String.valueOf(newCategories.getSelectedItem()))){
+            JOptionPane.showMessageDialog(rootPane, "Ehez a kategóriához már hozzá van adva!", "Hiba", JOptionPane.ERROR_MESSAGE);
+        }else{
+            categories.setText(categories.getText()+newCategories.getSelectedItem()+";");
+        }
+    }//GEN-LAST:event_jButton13ActionPerformed
+
+    private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
+        if(categories.getText().contains(String.valueOf(newCategories.getSelectedItem()))){
+            
+            categories.setText( categories.getText().substring(0,categories.getText().indexOf( String.valueOf(newCategories.getSelectedItem()) ) )+categories.getText().substring(categories.getText().indexOf( String.valueOf(newCategories.getSelectedItem()))+String.valueOf(newCategories.getSelectedItem()).length()+1, categories.getText().length()) );
+        }else{
+           JOptionPane.showMessageDialog(rootPane, "A könyv nem tartozik ebbe a kategóriába!", "Hiba", JOptionPane.ERROR_MESSAGE); 
+        }   
+    }//GEN-LAST:event_jButton14ActionPerformed
+
     public static PdfPCell createBarcode(PdfWriter writer, String code) throws DocumentException, IOException {
         BarcodeEAN barcode = new BarcodeEAN();
         barcode.setCodeType(Barcode.EAN8);
@@ -1597,6 +1708,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JTextField cardUserNumber;
     private com.toedter.calendar.JDateChooser cardValidDate;
     private javax.swing.JTextField cardValidNumber;
+    private javax.swing.JLabel categories;
     private javax.swing.JLabel currentPermission;
     private javax.swing.JLabel displayName;
     private javax.swing.JButton fileChooserButtonNew;
@@ -1605,6 +1717,8 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;
+    private javax.swing.JButton jButton13;
+    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -1634,7 +1748,9 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
@@ -1657,6 +1773,8 @@ public class Gui extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser newCardDate;
     private javax.swing.JTextField newCardName;
     private javax.swing.JTextField newCardPhone;
+    private com.toedter.calendar.JDateChooser newCardValid;
+    private javax.swing.JComboBox<String> newCategories;
     private javax.swing.JLabel preview;
     private javax.swing.JToggleButton scannerCardBorrow;
     private javax.swing.JToggleButton scannerISBNupload;
