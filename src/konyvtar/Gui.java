@@ -2,6 +2,9 @@ package konyvtar;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
+import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JYearChooser;
+import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,8 +12,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -28,8 +34,69 @@ public class Gui extends javax.swing.JFrame {
 
     public Gui() {
         initComponents();
+        initStyle();
     }
 
+    private void initStyle(){
+        this.getContentPane().setBackground(new Color(218,180,127));
+        for(Component c:borrow.getComponents()){
+            if(c instanceof JTextField){
+                c.setBackground(new Color(229,211,179));
+                ((JTextField) c).setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
+            }
+            if(c instanceof JComboBox){
+                c.setBackground(new Color(229,211,179));
+            }
+            if(c instanceof JDateChooser){
+                for(Component c1:((JDateChooser) c).getComponents()){
+                    c1.setBackground(new Color(229,211,179));
+                }
+            }
+        }
+        for(Component c:uploadBook.getComponents()){
+            if(c instanceof JTextField){
+                c.setBackground(new Color(229,211,179));
+                ((JTextField) c).setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
+            }
+            if(c instanceof JComboBox){
+                c.setBackground(new Color(229,211,179));
+            }
+            if(c instanceof JDateChooser){
+                for(Component c1:((JDateChooser) c).getComponents()){
+                    c1.setBackground(new Color(229,211,179));
+                }
+            }
+        }
+        for(Component c:cardManager.getComponents()){
+            if(c instanceof JTextField){
+                c.setBackground(new Color(229,211,179));
+                ((JTextField) c).setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
+            }
+            if(c instanceof JComboBox){
+                c.setBackground(new Color(229,211,179));
+            }
+            if(c instanceof JDateChooser){
+                for(Component c1:((JDateChooser) c).getComponents()){
+                    c1.setBackground(new Color(229,211,179));
+                }
+            }
+        }
+        for(Component c:adminPanel.getComponents()){
+            if(c instanceof JTextField){
+                c.setBackground(new Color(229,211,179));
+                ((JTextField) c).setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
+            }
+            if(c instanceof JComboBox){
+                c.setBackground(new Color(229,211,179));
+            }
+            if(c instanceof JDateChooser){
+                for(Component c1:((JDateChooser) c).getComponents()){
+                    c1.setBackground(new Color(229,211,179));
+                }
+            }
+        }
+    }
+    
     public void loadCategories(){
         dbConnect db=new dbConnect();
         Map result=db.getRequest("action=getCategories");
@@ -115,6 +182,7 @@ public class Gui extends javax.swing.JFrame {
         mainPanel.moveToFront(panel);
         mainPanel.revalidate();
         mainPanel.repaint();
+        initStyle();
     }
 
     private void updateBookISBN() {
@@ -242,8 +310,6 @@ public class Gui extends javax.swing.JFrame {
         CardNumber = new javax.swing.JTextField();
         borrowStockNum = new javax.swing.JTextField();
         UpBorrow = new javax.swing.JButton();
-        scannerCardBorrow = new javax.swing.JToggleButton();
-        scannerStockNumBorrow = new javax.swing.JToggleButton();
         jLabel6 = new javax.swing.JLabel();
         borrowDate = new com.toedter.calendar.JDateChooser();
         jSeparator2 = new javax.swing.JSeparator();
@@ -261,9 +327,7 @@ public class Gui extends javax.swing.JFrame {
         uploadBookTitle = new javax.swing.JTextField();
         uploadBookISBN = new javax.swing.JTextField();
         uploadBookSubmit = new javax.swing.JButton();
-        scannerISBNupload = new javax.swing.JToggleButton();
         uploadBookStockNum = new javax.swing.JTextField();
-        scannerStockNumUpload = new javax.swing.JToggleButton();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         uploadBookYear = new com.toedter.calendar.JYearChooser();
@@ -282,6 +346,7 @@ public class Gui extends javax.swing.JFrame {
         jButton13 = new javax.swing.JButton();
         categories = new javax.swing.JLabel();
         jButton14 = new javax.swing.JButton();
+        jButton15 = new javax.swing.JButton();
         cardManager = new javax.swing.JPanel();
         jSeparator4 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
@@ -332,42 +397,55 @@ public class Gui extends javax.swing.JFrame {
         jButton6.setText("jButton6");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Main");
+        setTitle("Könyvtár");
+        setAutoRequestFocus(false);
+        setBackground(new java.awt.Color(132, 111, 81));
+        setForeground(new java.awt.Color(132, 111, 81));
         setResizable(false);
 
         MenuPanel.setBackground(new java.awt.Color(193, 118, 70));
 
         displayName.setText("jLabel1");
 
+        borrowButton.setBackground(new java.awt.Color(229, 211, 179));
         borrowButton.setText("Kölcsönzés");
+        borrowButton.setBorderPainted(false);
         borrowButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 borrowButtonActionPerformed(evt);
             }
         });
 
+        newBookButton.setBackground(new java.awt.Color(229, 211, 179));
         newBookButton.setText("Új Könyv");
+        newBookButton.setBorderPainted(false);
         newBookButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newBookButtonActionPerformed(evt);
             }
         });
 
+        jButton3.setBackground(new java.awt.Color(229, 211, 179));
         jButton3.setText("Kártyák kezelése");
+        jButton3.setBorderPainted(false);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
+        jButton4.setBackground(new java.awt.Color(229, 211, 179));
         jButton4.setText("Kijelentkezés");
+        jButton4.setBorderPainted(false);
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
 
+        adminButton.setBackground(new java.awt.Color(229, 211, 179));
         adminButton.setText("Adminok");
+        adminButton.setBorderPainted(false);
         adminButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 adminButtonActionPerformed(evt);
@@ -380,7 +458,7 @@ public class Gui extends javax.swing.JFrame {
             MenuPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MenuPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                .addComponent(displayName, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
                 .addGap(101, 101, 101)
                 .addComponent(borrowButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -407,7 +485,10 @@ public class Gui extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        mainPanel.setBackground(new java.awt.Color(132, 111, 81));
         switchPanel(borrow);
+
+        borrow.setBackground(new java.awt.Color(218, 180, 127));
 
         jLabel1.setText("Kártya azonosító:");
 
@@ -424,27 +505,17 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        scannerCardBorrow.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                scannerCardBorrowActionPerformed(evt);
-            }
-        });
-
-        scannerStockNumBorrow.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                scannerStockNumBorrowActionPerformed(evt);
-            }
-        });
-
         jLabel6.setText("Visszahozás Dátuma:");
 
+        borrowDate.setBackground(new java.awt.Color(255, 255, 255));
+        borrowDate.setToolTipText("");
         borrowDate.setMinSelectableDate(new Date(System.currentTimeMillis()));
 
-        jSeparator2.setBackground(new java.awt.Color(102, 102, 255));
-        jSeparator2.setForeground(new java.awt.Color(102, 102, 255));
+        jSeparator2.setBackground(new java.awt.Color(132, 111, 81));
+        jSeparator2.setForeground(new java.awt.Color(132, 111, 81));
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        jLabel13.setText("Köynv kikölcsönzése");
+        jLabel13.setText("Könyv kikölcsönzése");
 
         jLabel14.setText("Kikölcsönzött könyv leadása");
 
@@ -490,25 +561,18 @@ public class Gui extends javax.swing.JFrame {
                                     .addComponent(CardNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(borrowLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
+                                .addGap(104, 104, 104)
                                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(borrowLayout.createSequentialGroup()
-                                        .addComponent(scannerStockNumBorrow)
-                                        .addContainerGap(439, Short.MAX_VALUE))
+                                        .addComponent(borrowBackButton)
+                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addGroup(borrowLayout.createSequentialGroup()
-                                        .addComponent(scannerCardBorrow)
-                                        .addGap(53, 53, 53)
-                                        .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(borrowLayout.createSequentialGroup()
-                                                .addComponent(borrowBackButton)
-                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addGroup(borrowLayout.createSequentialGroup()
-                                                .addComponent(jLabel15)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(borrowStockNumBack)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(scannerStockNumBorrowBack)
-                                                .addGap(60, 60, 60))))))
+                                        .addComponent(jLabel15)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(borrowStockNumBack, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(scannerStockNumBorrowBack)
+                                        .addGap(60, 60, 60))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borrowLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel14)
@@ -534,8 +598,7 @@ public class Gui extends javax.swing.JFrame {
                         .addGap(45, 45, 45)
                         .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(CardNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(scannerCardBorrow, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(CardNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(scannerStockNumBorrowBack, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -544,20 +607,21 @@ public class Gui extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(borrowStockNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scannerStockNumBorrow, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(borrowStockNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6)
                     .addComponent(borrowDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 255, Short.MAX_VALUE)
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(UpBorrow)
                     .addComponent(borrowBackButton))
                 .addContainerGap())
             .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE))
+                .addComponent(jSeparator2, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE))
         );
+
+        uploadBook.setBackground(new java.awt.Color(218, 180, 127));
 
         jLabel3.setText("Iró");
 
@@ -578,24 +642,12 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
-        scannerISBNupload.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                scannerISBNuploadActionPerformed(evt);
-            }
-        });
-
-        scannerStockNumUpload.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                scannerStockNumUploadActionPerformed(evt);
-            }
-        });
-
         jLabel7.setText("Könyvtári szám");
 
         jLabel8.setText("Kiadás Dátuma");
 
-        jSeparator1.setBackground(new java.awt.Color(102, 102, 255));
-        jSeparator1.setForeground(new java.awt.Color(102, 102, 255));
+        jSeparator1.setBackground(new java.awt.Color(132, 111, 81));
+        jSeparator1.setForeground(new java.awt.Color(132, 111, 81));
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jLabel9.setText("Raktári könyv kezelése");
@@ -647,6 +699,13 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        jButton15.setText("Új");
+        jButton15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton15ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout uploadBookLayout = new javax.swing.GroupLayout(uploadBook);
         uploadBook.setLayout(uploadBookLayout);
         uploadBookLayout.setHorizontalGroup(
@@ -667,15 +726,11 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(jLabel5)
                             .addComponent(jLabel7))
                         .addGap(18, 18, 18)
-                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(uploadBookLayout.createSequentialGroup()
-                                .addComponent(uploadBookStockNum)
-                                .addGap(18, 18, 18)
-                                .addComponent(scannerStockNumUpload))
-                            .addGroup(uploadBookLayout.createSequentialGroup()
-                                .addComponent(uploadBookISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(scannerISBNupload)))))
+                                .addComponent(uploadBookStockNum, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(51, 51, 51))
+                            .addComponent(uploadBookISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(70, 70, 70)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -689,6 +744,7 @@ public class Gui extends javax.swing.JFrame {
                     .addGroup(uploadBookLayout.createSequentialGroup()
                         .addGap(133, 133, 133)
                         .addComponent(jLabel10))
+                    .addComponent(categories, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(uploadBookLayout.createSequentialGroup()
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -709,8 +765,9 @@ public class Gui extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jButton13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton14))
-                    .addComponent(categories, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton15)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         uploadBookLayout.setVerticalGroup(
@@ -725,13 +782,11 @@ public class Gui extends javax.swing.JFrame {
                         .addGap(39, 39, 39)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(uploadBookISBN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(scannerISBNupload, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(uploadBookISBN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
-                            .addComponent(uploadBookStockNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(scannerStockNumUpload, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(uploadBookStockNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(uploadBookSubmit)
@@ -759,7 +814,8 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(jLabel29)
                             .addComponent(newCategories, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton13)
-                            .addComponent(jButton14))
+                            .addComponent(jButton14)
+                            .addComponent(jButton15))
                         .addGap(18, 18, 18)
                         .addComponent(categories, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -772,8 +828,10 @@ public class Gui extends javax.swing.JFrame {
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
 
-        jSeparator4.setBackground(new java.awt.Color(102, 102, 255));
-        jSeparator4.setForeground(new java.awt.Color(102, 102, 255));
+        cardManager.setBackground(new java.awt.Color(218, 180, 127));
+
+        jSeparator4.setBackground(new java.awt.Color(132, 111, 81));
+        jSeparator4.setForeground(new java.awt.Color(132, 111, 81));
         jSeparator4.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jLabel19.setText("Új kártya kiállítása");
@@ -878,7 +936,7 @@ public class Gui extends javax.swing.JFrame {
                                     .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(newCardPhone)
                                         .addComponent(newCardDate, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 266, Short.MAX_VALUE)
                         .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel22)
                             .addComponent(cardUser, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -916,9 +974,9 @@ public class Gui extends javax.swing.JFrame {
                                 .addGap(155, 155, 155))))))
             .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(cardManagerLayout.createSequentialGroup()
-                    .addGap(0, 355, Short.MAX_VALUE)
+                    .addGap(0, 415, Short.MAX_VALUE)
                     .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 355, Short.MAX_VALUE)))
+                    .addGap(0, 415, Short.MAX_VALUE)))
         );
         cardManagerLayout.setVerticalGroup(
             cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -975,7 +1033,7 @@ public class Gui extends javax.swing.JFrame {
                 .addComponent(jLabel28)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cardValidDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton11)
                     .addComponent(jButton12))
@@ -985,12 +1043,14 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(cardManagerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(cardManagerLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jSeparator4, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+                    .addComponent(jSeparator4, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
                     .addContainerGap()))
         );
 
-        jSeparator5.setBackground(new java.awt.Color(102, 102, 255));
-        jSeparator5.setForeground(new java.awt.Color(102, 102, 255));
+        adminPanel.setBackground(new java.awt.Color(218, 180, 127));
+
+        jSeparator5.setBackground(new java.awt.Color(132, 111, 81));
+        jSeparator5.setForeground(new java.awt.Color(132, 111, 81));
         jSeparator5.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         jLabel18.setText("Admin hozzáadása");
@@ -1080,7 +1140,7 @@ public class Gui extends javax.swing.JFrame {
                                         .addComponent(jLabel17)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(currentPermission, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                        .addGap(0, 96, Short.MAX_VALUE))
+                        .addGap(0, 178, Short.MAX_VALUE))
                     .addGroup(adminPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton8)
@@ -1091,7 +1151,7 @@ public class Gui extends javax.swing.JFrame {
             .addGroup(adminPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator5, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                    .addComponent(jSeparator5, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
                     .addGroup(adminPanelLayout.createSequentialGroup()
                         .addGroup(adminPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel18)
@@ -1200,28 +1260,6 @@ public class Gui extends javax.swing.JFrame {
         switchPanel(uploadBook);
     }//GEN-LAST:event_newBookButtonActionPerformed
 
-    private void scannerCardBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerCardBorrowActionPerformed
-        if (scannerCardBorrow.isSelected()) {
-            CardNumber.setText(JOptionPane.showInputDialog(""));
-            scannerCardBorrow.setSelected(false);
-        }
-    }//GEN-LAST:event_scannerCardBorrowActionPerformed
-
-    private void scannerStockNumBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerStockNumBorrowActionPerformed
-        if (scannerStockNumBorrow.isSelected()) {
-            borrowStockNum.setText(JOptionPane.showInputDialog(""));
-            scannerStockNumBorrow.setSelected(false);
-        }
-    }//GEN-LAST:event_scannerStockNumBorrowActionPerformed
-
-    private void scannerISBNuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerISBNuploadActionPerformed
-        if (scannerISBNupload.isSelected()) {
-            uploadBookISBN.setText(JOptionPane.showInputDialog(""));
-            scannerISBNupload.setSelected(false);
-            updateBookISBN();
-        }
-    }//GEN-LAST:event_scannerISBNuploadActionPerformed
-
     private void UpBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpBorrowActionPerformed
         if (CardNumber.getText().equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártya számot!", "Hiba", JOptionPane.ERROR_MESSAGE);
@@ -1276,10 +1314,6 @@ public class Gui extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_UpBorrowActionPerformed
-
-    private void scannerStockNumUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerStockNumUploadActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_scannerStockNumUploadActionPerformed
 
     private void fileChooserButtonNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooserButtonNewActionPerformed
         chooseImage = new JFileChooser();
@@ -1643,6 +1677,22 @@ public class Gui extends javax.swing.JFrame {
         }   
     }//GEN-LAST:event_jButton14ActionPerformed
 
+    private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
+        dbConnect db=new dbConnect();
+        String newCat=JOptionPane.showInputDialog(rootPane,"Add meg az új kategóriát","Info",JOptionPane.INFORMATION_MESSAGE);
+        System.err.println(newCat);
+        Map result=db.getRequest("action=Select;from=categories;category_name="+newCat);
+        if(result.get("response").equals("True")){
+            JOptionPane.showMessageDialog(rootPane, "Ez a kategória már létezik", "Hiba", JOptionPane.ERROR_MESSAGE); 
+        }else{
+            result=db.getRequest("action=Insert;to=categories(category_name);values=VALUES('"+newCat+"')");
+            if(result.get("response").equals("True")){
+                JOptionPane.showMessageDialog(rootPane, "Sikeres feltöltés!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                loadCategories();
+            }
+        }
+    }//GEN-LAST:event_jButton15ActionPerformed
+
     public static PdfPCell createBarcode(PdfWriter writer, String code) throws DocumentException, IOException {
         BarcodeEAN barcode = new BarcodeEAN();
         barcode.setCodeType(Barcode.EAN8);
@@ -1719,6 +1769,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton13;
     private javax.swing.JButton jButton14;
+    private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -1776,11 +1827,7 @@ public class Gui extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser newCardValid;
     private javax.swing.JComboBox<String> newCategories;
     private javax.swing.JLabel preview;
-    private javax.swing.JToggleButton scannerCardBorrow;
-    private javax.swing.JToggleButton scannerISBNupload;
-    private javax.swing.JToggleButton scannerStockNumBorrow;
     private javax.swing.JToggleButton scannerStockNumBorrowBack;
-    private javax.swing.JToggleButton scannerStockNumUpload;
     private javax.swing.JPanel uploadBook;
     private javax.swing.JTextField uploadBookAuthor;
     private javax.swing.JTextField uploadBookISBN;

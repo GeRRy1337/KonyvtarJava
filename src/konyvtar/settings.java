@@ -5,6 +5,7 @@
  */
 package konyvtar;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -21,6 +22,7 @@ public class settings extends javax.swing.JFrame {
      */
     public settings() {
         initComponents();
+        this.getContentPane().setBackground(new Color(218,180,127));
         initSettings();
     }
 
@@ -41,6 +43,8 @@ public class settings extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Beállítások");
+        setBackground(new java.awt.Color(218, 180, 127));
 
         jLabel1.setText("Szerver:");
 

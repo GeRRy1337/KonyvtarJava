@@ -4,6 +4,7 @@
  */
 package konyvtar;
 
+import java.awt.Color;
 import java.util.Map;
 import javax.swing.table.DefaultTableModel;
 
@@ -18,6 +19,7 @@ public class cards extends javax.swing.JFrame {
      */
     public cards() {
         initComponents();
+        this.getContentPane().setBackground(new Color(218,180,127));
         loadCards();
     }
 
@@ -61,6 +63,7 @@ public class cards extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Kártyák");
 
         cardsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
