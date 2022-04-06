@@ -317,7 +317,6 @@ public class Gui extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         borrowStockNumBack = new javax.swing.JTextField();
-        scannerStockNumBorrowBack = new javax.swing.JToggleButton();
         borrowBackButton = new javax.swing.JButton();
         uploadBook = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
@@ -523,12 +522,6 @@ public class Gui extends javax.swing.JFrame {
 
         borrowStockNumBack.setText("könyvtári szám");
 
-        scannerStockNumBorrowBack.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                scannerStockNumBorrowBackActionPerformed(evt);
-            }
-        });
-
         borrowBackButton.setText("Küldés");
         borrowBackButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -570,9 +563,7 @@ public class Gui extends javax.swing.JFrame {
                                         .addComponent(jLabel15)
                                         .addGap(18, 18, 18)
                                         .addComponent(borrowStockNumBack, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(scannerStockNumBorrowBack)
-                                        .addGap(60, 60, 60))))
+                                        .addGap(103, 103, 103))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, borrowLayout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel14)
@@ -599,11 +590,9 @@ public class Gui extends javax.swing.JFrame {
                         .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(CardNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(scannerStockNumBorrowBack, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel15)
-                            .addComponent(borrowStockNumBack, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel15)
+                        .addComponent(borrowStockNumBack, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(borrowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -727,11 +716,9 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(jLabel7))
                         .addGap(18, 18, 18)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(uploadBookLayout.createSequentialGroup()
-                                .addComponent(uploadBookStockNum, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(51, 51, 51))
+                            .addComponent(uploadBookStockNum, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(uploadBookISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(70, 70, 70)
+                .addGap(121, 121, 121)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -819,10 +806,11 @@ public class Gui extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(categories, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
-                            .addComponent(fileChooserButtonNew)
-                            .addComponent(fileChooserStringNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(fileChooserButtonNew)
+                                .addComponent(fileChooserStringNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 145, Short.MAX_VALUE)))
                 .addContainerGap())
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1439,18 +1427,19 @@ public class Gui extends javax.swing.JFrame {
         updateBookISBN();
     }//GEN-LAST:event_uploadBookISBNKeyReleased
 
-    private void scannerStockNumBorrowBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_scannerStockNumBorrowBackActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_scannerStockNumBorrowBackActionPerformed
-
     private void borrowBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrowBackButtonActionPerformed
         if (borrowStockNumBack.getText().equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!", "Hiba", JOptionPane.ERROR_MESSAGE);
             return;
         }
         dbConnect db = new dbConnect();
+        Map result = db.getRequest("action=Select;from=stock;stockNum=" + borrowStockNum.getText());
+        if (result.get("response").equals("False")) {
+            JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
-        Map result = db.getRequest("action=Update;to=borrow;set=state:1,returnDate:'" + sd.format(System.currentTimeMillis()) + "';stockNum=" + borrowStockNumBack.getText() + ";state=0");
+        result = db.getRequest("action=Update;to=borrow;set=state:1,returnDate:'" + sd.format(System.currentTimeMillis()) + "';stockNum=" + borrowStockNumBack.getText() + ";state=0");
         if (result.get("response").equals("True")) {
             JOptionPane.showMessageDialog(rootPane, "Sikeres könyv leadás!", "Info", JOptionPane.INFORMATION_MESSAGE);
             borrowStockNumBack.setText("");
@@ -1470,34 +1459,43 @@ public class Gui extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártyaszámot!", "Hiba", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        
 
         dbConnect db = new dbConnect();
+        Map result=db.getRequest("action=Select;from=cards;id=" + cardUserNumber.getText());
+        if (result.get("response").equals("False")) {
+            JOptionPane.showMessageDialog(rootPane, "Nincs ilyen kártyaszám!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         int userId = 0;
         Map resultId = db.getRequest("action=Select;from=users;username='" + cardUser.getText() + "'");
         if (resultId.get("response").equals("True")) {
             userId = Integer.parseInt(String.valueOf(resultId.get("id")));
-        }
-        Map result = db.getRequest("action=Select;from=usercards;userId=" + userId);
-        if (result.get("response").equals("True")) {
-            int update = JOptionPane.showConfirmDialog(rootPane, "Ehez a felhasználóhoz már van kártya társítva, kívánja folytatni a folyamatot?", "Info", JOptionPane.YES_NO_OPTION);
-            if (update == JOptionPane.NO_OPTION) {
-                cardUser.setText("");
-                cardUserNumber.setText("");
-            } else if (update == JOptionPane.YES_OPTION) {
-                result = db.getRequest("action=Update;to=usercards;set=cardId:" + cardUserNumber.getText() + ";userId=" + userId);
+
+            result = db.getRequest("action=Select;from=usercards;userId=" + userId);
+            if (result.get("response").equals("True")) {
+                int update = JOptionPane.showConfirmDialog(rootPane, "Ehez a felhasználóhoz már van kártya társítva, kívánja folytatni a folyamatot?", "Info", JOptionPane.YES_NO_OPTION);
+                if (update == JOptionPane.NO_OPTION) {
+                    cardUser.setText("");
+                    cardUserNumber.setText("");
+                } else if (update == JOptionPane.YES_OPTION) {
+                    result = db.getRequest("action=Update;to=usercards;set=cardId:" + cardUserNumber.getText() + ";userId=" + userId);
+                    if (result.get("response").equals("True")) {
+                        JOptionPane.showMessageDialog(rootPane, "Sikeres kártya társítása!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                        cardUser.setText("");
+                        cardUserNumber.setText("");
+                    }
+                }
+            } else {
+                result = db.getRequest("action=Insert;to=usercards(userId,cardId);values=" + String.format("VALUES(%s,%s)", userId, cardUserNumber.getText()));
                 if (result.get("response").equals("True")) {
                     JOptionPane.showMessageDialog(rootPane, "Sikeres kártya társítása!", "Info", JOptionPane.INFORMATION_MESSAGE);
                     cardUser.setText("");
                     cardUserNumber.setText("");
                 }
             }
-        } else {
-            result = db.getRequest("action=Insert;to=usercards(userId,cardId);values=" + String.format("VALUES(%s,%s)", userId, cardUserNumber.getText()));
-            if (result.get("response").equals("True")) {
-                JOptionPane.showMessageDialog(rootPane, "Sikeres kártya társítása!", "Info", JOptionPane.INFORMATION_MESSAGE);
-                cardUser.setText("");
-                cardUserNumber.setText("");
-            }
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Nincs ilyen nevű felhasználó!", "Hiba", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -1580,7 +1578,7 @@ public class Gui extends javax.swing.JFrame {
         if (result.get("response").equals("True")) {
             result = db.getRequest("action=Insert;to=admins(id,permission);values=" + String.format("VALUES( %s, %s)", result.get("id"), (adminAddPermission.getSelectedIndex() + 1)));
             if (result.get("response").equals("True")) {
-                JOptionPane.showMessageDialog(rootPane, "Sikeres admin beállítás!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "Sikeres admin hozzáadása!", "Info", JOptionPane.INFORMATION_MESSAGE);
             }
             updateAdmins();
             updateUsers();
@@ -1612,7 +1610,12 @@ public class Gui extends javax.swing.JFrame {
             return;
         }
         dbConnect db = new dbConnect();
-        Map result = db.getRequest("action=Delete;from=stock;stockNum=" + uploadBookStockNum.getText());
+        Map result = db.getRequest("action=Select;from=stock;stockNum=" + uploadBookStockNum.getText());
+        if (result.get("response").equals("False")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem létezik ez a könyvtári szám!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        result = db.getRequest("action=Delete;from=stock;stockNum=" + uploadBookStockNum.getText());
         if (result.get("response").equals("True")) {
             JOptionPane.showMessageDialog(rootPane, "Sikeres törlés!", "Info", JOptionPane.INFORMATION_MESSAGE);
             uploadBookStockNum.setText("");
@@ -1827,7 +1830,6 @@ public class Gui extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser newCardValid;
     private javax.swing.JComboBox<String> newCategories;
     private javax.swing.JLabel preview;
-    private javax.swing.JToggleButton scannerStockNumBorrowBack;
     private javax.swing.JPanel uploadBook;
     private javax.swing.JTextField uploadBookAuthor;
     private javax.swing.JTextField uploadBookISBN;
