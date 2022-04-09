@@ -99,7 +99,6 @@ public class dbConnect {
                     BufferedReader br=new BufferedReader(new InputStreamReader(instream,Charset.forName(StandardCharsets.UTF_8.name())));
                     String sor;
                     while((sor = br.readLine())!=null ){
-                        System.out.println(sor);
                         if (sor.split(":").length>1)
                             responseString.put(sor.split(":")[0],sor.split(":")[1]);
                         else
