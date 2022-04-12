@@ -39,79 +39,79 @@ public class Gui extends javax.swing.JFrame {
         initStyle();
     }
 
-    private void initStyle(){
-        this.getContentPane().setBackground(new Color(218,180,127));
-        for(Component c:borrow.getComponents()){
-            if(c instanceof JTextField){
-                c.setBackground(new Color(229,211,179));
+    private void initStyle() {
+        this.getContentPane().setBackground(new Color(218, 180, 127));
+        for (Component c : borrow.getComponents()) {
+            if (c instanceof JTextField) {
+                c.setBackground(new Color(229, 211, 179));
                 ((JTextField) c).setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
             }
-            if(c instanceof JComboBox){
-                c.setBackground(new Color(229,211,179));
+            if (c instanceof JComboBox) {
+                c.setBackground(new Color(229, 211, 179));
             }
-            if(c instanceof JDateChooser){
-                for(Component c1:((JDateChooser) c).getComponents()){
-                    c1.setBackground(new Color(229,211,179));
+            if (c instanceof JDateChooser) {
+                for (Component c1 : ((JDateChooser) c).getComponents()) {
+                    c1.setBackground(new Color(229, 211, 179));
                 }
             }
         }
-        for(Component c:uploadBook.getComponents()){
-            if(c instanceof JTextField){
-                c.setBackground(new Color(229,211,179));
+        for (Component c : uploadBook.getComponents()) {
+            if (c instanceof JTextField) {
+                c.setBackground(new Color(229, 211, 179));
                 ((JTextField) c).setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
             }
-            if(c instanceof JComboBox){
-                c.setBackground(new Color(229,211,179));
+            if (c instanceof JComboBox) {
+                c.setBackground(new Color(229, 211, 179));
             }
-            if(c instanceof JDateChooser){
-                for(Component c1:((JDateChooser) c).getComponents()){
-                    c1.setBackground(new Color(229,211,179));
+            if (c instanceof JDateChooser) {
+                for (Component c1 : ((JDateChooser) c).getComponents()) {
+                    c1.setBackground(new Color(229, 211, 179));
                 }
             }
         }
-        for(Component c:cardManager.getComponents()){
-            if(c instanceof JTextField){
-                c.setBackground(new Color(229,211,179));
+        for (Component c : cardManager.getComponents()) {
+            if (c instanceof JTextField) {
+                c.setBackground(new Color(229, 211, 179));
                 ((JTextField) c).setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
             }
-            if(c instanceof JComboBox){
-                c.setBackground(new Color(229,211,179));
+            if (c instanceof JComboBox) {
+                c.setBackground(new Color(229, 211, 179));
             }
-            if(c instanceof JDateChooser){
-                for(Component c1:((JDateChooser) c).getComponents()){
-                    c1.setBackground(new Color(229,211,179));
+            if (c instanceof JDateChooser) {
+                for (Component c1 : ((JDateChooser) c).getComponents()) {
+                    c1.setBackground(new Color(229, 211, 179));
                 }
             }
         }
-        for(Component c:adminPanel.getComponents()){
-            if(c instanceof JTextField){
-                c.setBackground(new Color(229,211,179));
+        for (Component c : adminPanel.getComponents()) {
+            if (c instanceof JTextField) {
+                c.setBackground(new Color(229, 211, 179));
                 ((JTextField) c).setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
             }
-            if(c instanceof JComboBox){
-                c.setBackground(new Color(229,211,179));
+            if (c instanceof JComboBox) {
+                c.setBackground(new Color(229, 211, 179));
             }
-            if(c instanceof JDateChooser){
-                for(Component c1:((JDateChooser) c).getComponents()){
-                    c1.setBackground(new Color(229,211,179));
+            if (c instanceof JDateChooser) {
+                for (Component c1 : ((JDateChooser) c).getComponents()) {
+                    c1.setBackground(new Color(229, 211, 179));
                 }
             }
         }
     }
-    
-    public void loadCategories(){
-        dbConnect db=new dbConnect();
-        Map result=db.getRequest("action=getCategories");
-        if(result.get("response").equals("True")){
+
+    public void loadCategories() {
+        dbConnect db = new dbConnect();
+        Map result = db.getRequest("action=getCategories");
+        if (result.get("response").equals("True")) {
             newCategories.removeAllItems();
-            String response = String.valueOf(result.get("categories")).replace("\"","");
+            String response = String.valueOf(result.get("categories")).replace("\"", "");
             String categories[] = response.substring(1, response.length() - 1).split(",");
             for (String s : categories) {
                 newCategories.addItem(s);
             }
         }
     }
-    
+
     public boolean checkLogin() {
         if (!user.loginValue()) {
             this.setVisible(false);
@@ -163,7 +163,7 @@ public class Gui extends javax.swing.JFrame {
                 updateAdmins();
                 updateUsers();
             }
-        }else if(panel == uploadBook){
+        } else if (panel == uploadBook) {
             loadCategories();
         }
         for (Component c : borrow.getComponents()) {
@@ -202,15 +202,15 @@ public class Gui extends javax.swing.JFrame {
                     } else {
                         uploadBookAuthor.setText("Ismeretlen");
                     }
-                    Map category=db.getRequest("action=getCategories;bId="+result.get("id"));
-                    if(category.get("response").equals("True")){
+                    Map category = db.getRequest("action=getCategories;bId=" + result.get("id"));
+                    if (category.get("response").equals("True")) {
                         categories.setText("");
-                        String response = String.valueOf(category.get("categories")).replace("\"","");
+                        String response = String.valueOf(category.get("categories")).replace("\"", "");
                         String cat[] = response.substring(1, response.length() - 1).split(",");
-                        for(String s:cat){
-                            categories.setText( (categories.getText()+s+"; ").trim() );
+                        for (String s : cat) {
+                            categories.setText((categories.getText() + s + "; ").trim());
                         }
-                    }else{
+                    } else {
                         categories.setText("");
                     }
                 } else {
@@ -360,6 +360,7 @@ public class Gui extends javax.swing.JFrame {
         categories = new javax.swing.JLabel();
         jButton14 = new javax.swing.JButton();
         jButton15 = new javax.swing.JButton();
+        jButton17 = new javax.swing.JButton();
         cardManager = new javax.swing.JPanel();
         jSeparator4 = new javax.swing.JSeparator();
         jLabel19 = new javax.swing.JLabel();
@@ -708,6 +709,13 @@ public class Gui extends javax.swing.JFrame {
             }
         });
 
+        jButton17.setText("Módosítások mentése");
+        jButton17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton17ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout uploadBookLayout = new javax.swing.GroupLayout(uploadBook);
         uploadBook.setLayout(uploadBookLayout);
         uploadBookLayout.setHorizontalGroup(
@@ -733,42 +741,48 @@ public class Gui extends javax.swing.JFrame {
                             .addComponent(uploadBookISBN, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(121, 121, 121)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(uploadBookLayout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addGap(68, 68, 68)
-                        .addComponent(fileChooserStringNew, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(fileChooserButtonNew))
-                    .addGroup(uploadBookLayout.createSequentialGroup()
-                        .addGap(133, 133, 133)
-                        .addComponent(jLabel10))
-                    .addComponent(categories, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(uploadBookLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel8)
-                            .addComponent(jLabel29))
-                        .addGap(16, 16, 16)
-                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(uploadBookLayout.createSequentialGroup()
-                                .addGap(1, 1, 1)
+                                .addComponent(jLabel12)
+                                .addGap(68, 68, 68)
+                                .addComponent(fileChooserStringNew, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(fileChooserButtonNew))
+                            .addGroup(uploadBookLayout.createSequentialGroup()
+                                .addGap(133, 133, 133)
+                                .addComponent(jLabel10))
+                            .addComponent(categories, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(uploadBookLayout.createSequentialGroup()
+                                .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel11)
+                                    .addComponent(jLabel8)
+                                    .addComponent(jLabel29))
+                                .addGap(16, 16, 16)
                                 .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(uploadBookAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
-                                    .addComponent(uploadBookTitle)))
-                            .addComponent(uploadBookPublisher)
-                            .addComponent(uploadBookYear, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
-                            .addComponent(newCategories, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton13)
+                                    .addGroup(uploadBookLayout.createSequentialGroup()
+                                        .addGap(1, 1, 1)
+                                        .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(uploadBookAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                                            .addComponent(uploadBookTitle)))
+                                    .addComponent(uploadBookPublisher)
+                                    .addComponent(uploadBookYear, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                                    .addComponent(newCategories, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton15)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(uploadBookLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton15)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         uploadBookLayout.setVerticalGroup(
             uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -824,7 +838,8 @@ public class Gui extends javax.swing.JFrame {
                             .addGroup(uploadBookLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(fileChooserButtonNew)
                                 .addComponent(fileChooserStringNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 145, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
+                        .addComponent(jButton17)))
                 .addContainerGap())
             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
@@ -1382,8 +1397,8 @@ public class Gui extends javax.swing.JFrame {
                         }
                     }
                 } else {
-                    String birthDate=JOptionPane.showInputDialog(rootPane, "Kérlek add meg az író születési dátumát", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    result = db.getRequest("action=Insert;to=author(name,birthDate);values=" + String.format("VALUES('%s','%s')", uploadBookAuthor.getText(),birthDate));
+                    String birthDate = JOptionPane.showInputDialog(rootPane, "Kérlek add meg az író születési dátumát", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    result = db.getRequest("action=Insert;to=author(name,birthDate);values=" + String.format("VALUES('%s','%s')", uploadBookAuthor.getText(), birthDate));
                     if (result.get("response").equals("True")) {
                         authorId = db.getRequest("action=Select;from=author;name=" + uploadBookAuthor.getText());
                         if (authorId.get("response").equals("True")) {
@@ -1402,15 +1417,15 @@ public class Gui extends javax.swing.JFrame {
                 }
                 Map bookId = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
                 if (bookId.get("response").equals("True")) {
-                    String categoryupload[]=categories.getText().split(";");
-                    for(int i=0;i<categoryupload.length;i++){
-                        if(!categoryupload[i].equals("")){
-                            String sql=("action=Insert;to=categoryconn(bookId,categoryId);values="+String.format("VALUES(%s, (Select category_id from categories where category_name like '%s' ) )",bookId.get("id"), categoryupload[i] ) );
-                            result=db.getRequest(sql);
+                    String categoryupload[] = categories.getText().split(";");
+                    for (int i = 0; i < categoryupload.length; i++) {
+                        if (!categoryupload[i].equals("")) {
+                            String sql = ("action=Insert;to=categoryconn(bookId,categoryId);values=" + String.format("VALUES(%s, (Select category_id from categories where category_name like '%s' ) )", bookId.get("id"), categoryupload[i]));
+                            result = db.getRequest(sql);
                         }
                     }
                 }
-                
+
             }
             uploadBookYear.setYear(1);
             uploadBookAuthor.setText("");
@@ -1460,10 +1475,9 @@ public class Gui extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártyaszámot!", "Hiba", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
 
         dbConnect db = new dbConnect();
-        Map result=db.getRequest("action=Select;from=cards;id=" + cardUserNumber.getText());
+        Map result = db.getRequest("action=Select;from=cards;id=" + cardUserNumber.getText());
         if (result.get("response").equals("False")) {
             JOptionPane.showMessageDialog(rootPane, "Nincs ilyen kártyaszám!", "Hiba", JOptionPane.ERROR_MESSAGE);
             return;
@@ -1495,7 +1509,7 @@ public class Gui extends javax.swing.JFrame {
                     cardUserNumber.setText("");
                 }
             }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(rootPane, "Nincs ilyen nevű felhasználó!", "Hiba", JOptionPane.ERROR_MESSAGE);
         }
 
@@ -1503,7 +1517,7 @@ public class Gui extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         //new preview(newCardName.getText(), newCardAddress.getText()).setVisible(true);
-        String[] args={newCardName.getText(), newCardAddress.getText()};
+        String[] args = {newCardName.getText(), newCardAddress.getText()};
         preview.main(args);
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -1667,32 +1681,32 @@ public class Gui extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        if(categories.getText().contains(String.valueOf(newCategories.getSelectedItem()))){
+        if (categories.getText().contains(String.valueOf(newCategories.getSelectedItem()))) {
             JOptionPane.showMessageDialog(rootPane, "Ehez a kategóriához már hozzá van adva!", "Hiba", JOptionPane.ERROR_MESSAGE);
-        }else{
-            categories.setText(categories.getText()+newCategories.getSelectedItem()+";");
+        } else {
+            categories.setText(categories.getText() + newCategories.getSelectedItem() + ";");
         }
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        if(categories.getText().contains(String.valueOf(newCategories.getSelectedItem()))){
-            
-            categories.setText( categories.getText().substring(0,categories.getText().indexOf( String.valueOf(newCategories.getSelectedItem()) ) )+categories.getText().substring(categories.getText().indexOf( String.valueOf(newCategories.getSelectedItem()))+String.valueOf(newCategories.getSelectedItem()).length()+1, categories.getText().length()) );
-        }else{
-           JOptionPane.showMessageDialog(rootPane, "A könyv nem tartozik ebbe a kategóriába!", "Hiba", JOptionPane.ERROR_MESSAGE); 
-        }   
+        if (categories.getText().contains(String.valueOf(newCategories.getSelectedItem()))) {
+
+            categories.setText(categories.getText().substring(0, categories.getText().indexOf(String.valueOf(newCategories.getSelectedItem()))) + categories.getText().substring(categories.getText().indexOf(String.valueOf(newCategories.getSelectedItem())) + String.valueOf(newCategories.getSelectedItem()).length() + 1, categories.getText().length()));
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "A könyv nem tartozik ebbe a kategóriába!", "Hiba", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton14ActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-        dbConnect db=new dbConnect();
-        String newCat=JOptionPane.showInputDialog(rootPane,"Add meg az új kategóriát","Info",JOptionPane.INFORMATION_MESSAGE);
+        dbConnect db = new dbConnect();
+        String newCat = JOptionPane.showInputDialog(rootPane, "Add meg az új kategóriát", "Info", JOptionPane.INFORMATION_MESSAGE);
         System.err.println(newCat);
-        Map result=db.getRequest("action=Select;from=categories;category_name="+newCat);
-        if(result.get("response").equals("True")){
-            JOptionPane.showMessageDialog(rootPane, "Ez a kategória már létezik", "Hiba", JOptionPane.ERROR_MESSAGE); 
-        }else{
-            result=db.getRequest("action=Insert;to=categories(category_name);values=VALUES('"+newCat+"')");
-            if(result.get("response").equals("True")){
+        Map result = db.getRequest("action=Select;from=categories;category_name=" + newCat);
+        if (result.get("response").equals("True")) {
+            JOptionPane.showMessageDialog(rootPane, "Ez a kategória már létezik", "Hiba", JOptionPane.ERROR_MESSAGE);
+        } else {
+            result = db.getRequest("action=Insert;to=categories(category_name);values=VALUES('" + newCat + "')");
+            if (result.get("response").equals("True")) {
                 JOptionPane.showMessageDialog(rootPane, "Sikeres feltöltés!", "Info", JOptionPane.INFORMATION_MESSAGE);
                 loadCategories();
             }
@@ -1706,6 +1720,81 @@ public class Gui extends javax.swing.JFrame {
     private void uploadBookISBNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_uploadBookISBNFocusLost
         updateBookISBN();
     }//GEN-LAST:event_uploadBookISBNFocusLost
+
+    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+        if (uploadBookISBN.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg ISBN számot!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        dbConnect db = new dbConnect();
+        Map result = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
+        try {
+            if (result.get("response").equals("True")) {
+                if (uploadBookTitle.getText().equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtad meg a könyv címét!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (uploadBookAuthor.getText().equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtad meg az írót!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (uploadBookPublisher.getText().equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadót!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (uploadBookYear.getYear() < 0) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadási dátumot!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (categories.getText().equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kategóriá(ka)t!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                Map authorId = db.getRequest("action=Select;from=author;name=" + uploadBookAuthor.getText());
+                if (authorId.get("response").equals("True")) {
+                    result = db.getRequest("action=Update;to=books;set=BookTitle:'"+uploadBookTitle.getText()+"',AuthorId:"+authorId.get("id")+",YearOfPublication:'"+uploadBookYear.getYear()+"',Publisher:'"+uploadBookPublisher.getText()+"';ISBN="+uploadBookISBN.getText());  
+                    if (result.get("response").equals("True")) {
+                        JOptionPane.showMessageDialog(rootPane, "Sikeres könyvadatok módosítása!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                      
+                } else {
+                    String birthDate = JOptionPane.showInputDialog(rootPane, "Kérlek add meg az író születési dátumát", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    result = db.getRequest("action=Insert;to=author(name,birthDate);values=" + String.format("VALUES('%s','%s')", uploadBookAuthor.getText(), birthDate));
+                    if (result.get("response").equals("True")) {
+                        authorId = db.getRequest("action=Select;from=author;name=" + uploadBookAuthor.getText());
+                        if (authorId.get("response").equals("True")) {
+                            result = db.getRequest("action=Update;to=books;set=BookTitle:'"+uploadBookTitle.getText()+"',AuthorId:"+authorId.get("id")+",YearOfPublication:'"+uploadBookYear.getYear()+"',Publisher:'"+uploadBookPublisher.getText()+"';ISBN="+uploadBookISBN.getText());  
+                            if (result.get("response").equals("True")) {
+                                JOptionPane.showMessageDialog(rootPane, "Sikeres könyvadatok módosítása!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        }
+                    }
+                }
+                Map bookId = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
+                if (bookId.get("response").equals("True")) {
+                    db.getRequest("action=Delete;from=categoryconn;bookId="+bookId.get("id"));
+                    String categoryupload[] = categories.getText().split(";");
+                    for (int i = 0; i < categoryupload.length; i++) {
+                        if (!categoryupload[i].equals("")) {
+                            String sql = ("action=Insert;to=categoryconn(bookId,categoryId);values=" + String.format("VALUES(%s, (Select category_id from categories where category_name like '%s' ) )", bookId.get("id"), categoryupload[i]));
+                            db.getRequest(sql);
+                        }
+                    }
+                }
+            }
+            uploadBookYear.setYear(1);
+            uploadBookAuthor.setText("");
+            uploadBookTitle.setText("");
+            uploadBookPublisher.setText("");
+            uploadBookISBN.setText("");
+            uploadBookStockNum.setText("");
+            fileChooserStringNew.setText("");
+            categories.setText("");
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Hiba", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton17ActionPerformed
 
     public static PdfPCell createBarcode(PdfWriter writer, String code) throws DocumentException, IOException {
         BarcodeEAN barcode = new BarcodeEAN();
@@ -1785,6 +1874,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton16;
+    private javax.swing.JButton jButton17;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
