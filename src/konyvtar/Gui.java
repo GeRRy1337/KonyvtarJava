@@ -115,21 +115,30 @@ public class Gui extends javax.swing.JFrame {
      * @return boolean bejelentkezés állapota
      */
     public boolean checkLogin() {
-        user.updatePermission();
-        if (!user.loginValue() || user.getPermission() < 1) {
+
+        if (!user.loginValue()) {
             this.setVisible(false);
             loginWindow.setVisible(true);
             return true;
         } else {
-            setDisplayName(user.getUsername());
-            if (user.getPermission() < 2) {
-                adminButton.setEnabled(false);
-                adminButton.setVisible(false);
+            user.updatePermission();
+            if (user.getPermission() < 1) {
+                this.setVisible(false);
+                loginWindow.setVisible(true);
+                return true;
             } else {
-                adminButton.setEnabled(true);
-                adminButton.setVisible(true);
+                setDisplayName(user.getUsername());
+
+                if (user.getPermission() < 2) {
+                    adminButton.setEnabled(false);
+                    adminButton.setVisible(false);
+                } else {
+                    adminButton.setEnabled(true);
+                    adminButton.setVisible(true);
+                }
             }
         }
+
         return false;
     }
 
@@ -1925,16 +1934,21 @@ public class Gui extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Gui.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

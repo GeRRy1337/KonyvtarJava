@@ -61,7 +61,7 @@ public class Login extends javax.swing.JFrame {
             //nem létezik a feléhasználó
             JOptionPane.showMessageDialog(rootPane, "Hibás bejelentkezés!", "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
-            System.err.println(e);
+            e.printStackTrace();
             JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

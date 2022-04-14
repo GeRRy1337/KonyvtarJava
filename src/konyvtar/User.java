@@ -42,6 +42,7 @@ public class User {
         fontos ha a felhasználótol megvoják az admin jogosultságait ne tudja tovább használni a programot
      */
     public void updatePermission() {
+        this.getUsername();
         dbConnect db = new dbConnect();
         Map result = db.getRequest("action=getPermission;username=" + this.username);
         if (result.get("response").equals("True")) {
