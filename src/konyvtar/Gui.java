@@ -7,19 +7,15 @@ import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.rendering.PDFRenderer;
 
 /**
  *
@@ -27,9 +23,6 @@ import org.apache.pdfbox.rendering.PDFRenderer;
  */
 public class Gui extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Gui
-     */
     private final User user = new User();
     protected Login loginWindow = new Login();
     private JFileChooser chooseImage;
@@ -39,17 +32,18 @@ public class Gui extends javax.swing.JFrame {
         initStyle();
     }
 
+    // kinézet formázása
     private void initStyle() {
         this.getContentPane().setBackground(new Color(218, 180, 127));
         for (Component c : borrow.getComponents()) {
-            if (c instanceof JTextField) {
+            if (c instanceof JTextField) { // szöveges mezők kinézete
                 c.setBackground(new Color(229, 211, 179));
                 ((JTextField) c).setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
             }
-            if (c instanceof JComboBox) {
+            if (c instanceof JComboBox) {// lenyíló listák kinézete
                 c.setBackground(new Color(229, 211, 179));
             }
-            if (c instanceof JDateChooser) {
+            if (c instanceof JDateChooser) {// naptár kinézete
                 for (Component c1 : ((JDateChooser) c).getComponents()) {
                     c1.setBackground(new Color(229, 211, 179));
                 }
@@ -99,6 +93,9 @@ public class Gui extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Kategóriák lekérdezése és betöltése a lenyiló listába
+     */
     public void loadCategories() {
         dbConnect db = new dbConnect();
         Map result = db.getRequest("action=getCategories");
@@ -112,8 +109,14 @@ public class Gui extends javax.swing.JFrame {
         }
     }
 
+    /**
+     * Bejelentkezés vizsgálata
+     *
+     * @return boolean bejelentkezés állapota
+     */
     public boolean checkLogin() {
-        if (!user.loginValue()) {
+        user.updatePermission();
+        if (!user.loginValue() || user.getPermission() < 1) {
             this.setVisible(false);
             loginWindow.setVisible(true);
             return true;
@@ -130,26 +133,34 @@ public class Gui extends javax.swing.JFrame {
         return false;
     }
 
+    /*
+        bejelentkezés utáni adat állítások
+     */
     protected void returnLogin(int id, int permission) {
         this.setVisible(true);
         user.setLogin(true);
         user.setId(id);
         user.setPermission(permission);
-        //setDisplayName(user.getUsername());
         checkLogin();
     }
 
+    //név beállítása a menűsáv bal oldalán
     private void setDisplayName(String newName) {
         displayName.setText(newName);
     }
 
+    //kijelentkezés
     private void logout() {
         user.setLogin(false);
         switchPanel(borrow);
         checkLogin();
     }
 
+    //ablakváltás
     private void switchPanel(javax.swing.JPanel panel) {
+        //bejelentkezés ellenőrzése
+        checkLogin();
+        //az adminpanel csak akkor jelenjen meg ha megfelelő engedélyszintünk van
         if (panel == adminPanel) {
             user.updatePermission();
             if (user.getPermission() < 2) {
@@ -163,9 +174,10 @@ public class Gui extends javax.swing.JFrame {
                 updateAdmins();
                 updateUsers();
             }
-        } else if (panel == uploadBook) {
+        } else if (panel == uploadBook) { // ha könyvfeltöltésen vagyunk kérdezzük le a kategóriákat
             loadCategories();
         }
+        //nem használt panelek elemeinek kikapcsolása
         for (Component c : borrow.getComponents()) {
             c.setEnabled(false);
         }
@@ -178,6 +190,7 @@ public class Gui extends javax.swing.JFrame {
         for (Component c : adminPanel.getComponents()) {
             c.setEnabled(false);
         }
+        //a megnyitott panel elemeinek bekapcsolása
         for (Component c : panel.getComponents()) {
             c.setEnabled(true);
         }
@@ -187,21 +200,27 @@ public class Gui extends javax.swing.JFrame {
         initStyle();
     }
 
+    //Könyv hozzáadásánal az isbn megadása után ellenőrizük létezik e ha igen betöltjük a könyv adatait
     private void updateBookISBN() {
         if (!uploadBookISBN.getText().equals("")) {
             dbConnect db = new dbConnect();
             Map result = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
             try {
-                if (result.get("response").equals("True")) {
+                if (result.get("response").equals("True")) {//létezik a könyv
+                    //könyv adatai
                     uploadBookTitle.setText(String.valueOf(result.get("BookTitle")));
                     uploadBookPublisher.setText(String.valueOf(result.get("Publisher")));
                     uploadBookYear.setValue(Integer.parseInt(String.valueOf(result.get("YearOfPublication"))));
+
+                    //iró adatai
                     Map author = db.getRequest("action=Select;from=author;id=" + result.get("id"));
                     if (author.get("response").equals("True")) {
                         uploadBookAuthor.setText(String.valueOf(author.get("name")));
                     } else {
                         uploadBookAuthor.setText("Ismeretlen");
                     }
+
+                    //a könyv kategóriái
                     Map category = db.getRequest("action=getCategories;bId=" + result.get("id"));
                     if (category.get("response").equals("True")) {
                         categories.setText("");
@@ -218,19 +237,23 @@ public class Gui extends javax.swing.JFrame {
                     uploadBookPublisher.setText("");
                     uploadBookYear.setValue(0);
                     uploadBookAuthor.setText("");
+                    categories.setText("");
                 }
             } catch (Exception e) {
                 System.err.println(e.getMessage());
                 JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Hiba", JOptionPane.ERROR_MESSAGE);
             }
         } else {
+            //ha változott az isbn és nem létezik a könyv üresre állítjuk a mezőket
             uploadBookTitle.setText("");
             uploadBookPublisher.setText("");
             uploadBookYear.setValue(0);
             uploadBookAuthor.setText("");
+            categories.setText("");
         }
     }
 
+    //admin panelen az adminok listájának lekérdezése
     public void updateAdmins() {
         dbConnect db = new dbConnect();
         Map result = db.getRequest("action=adminList");
@@ -244,6 +267,7 @@ public class Gui extends javax.swing.JFrame {
         }
     }
 
+    //admin panelen a felhasználók listájának lekérdezése
     public void updateUsers() {
         dbConnect db = new dbConnect();
         Map result = db.getRequest("action=userList");
@@ -257,6 +281,7 @@ public class Gui extends javax.swing.JFrame {
         }
     }
 
+    //admin panelen a kiválasztott felhasználo engedélyszintjének a lekérdezése
     public void updateCurrentPermission() {
         dbConnect db = new dbConnect();
         Map result = db.getRequest("action=getPermission;username=" + adminRemoveUser.getSelectedItem());
@@ -266,11 +291,13 @@ public class Gui extends javax.swing.JFrame {
             } else if (result.get("permission").equals("2")) {
                 currentPermission.setText("Rendszergazda");
             } else {
+                //hibás érték
                 currentPermission.setText("Ismeretlen");
             }
         }
     }
 
+    //új kártya hozzáadásakor az adatok ellenőrzése
     public boolean CheckNewCards() {
         if (newCardName.getText().equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg nevet.", "Hiba", JOptionPane.ERROR_MESSAGE);
@@ -295,6 +322,175 @@ public class Gui extends javax.swing.JFrame {
         if (newCardPhone.getText().matches("[^0-9]+$")) {
             JOptionPane.showMessageDialog(rootPane, "A telefonszám csak számokat tartalmazhat.", "Hiba", JOptionPane.ERROR_MESSAGE);
             return false;
+        }
+        return true;
+    }
+
+    //kölcsönzés adatok ellenörzése
+    public boolean checkUpBorrow() {
+        if (CardNumber.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártya számot!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (borrowStockNum.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (borrowDate.getDate() == null) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál visszahozási dátumot!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        try {
+            dbConnect db = new dbConnect();
+            Map result = db.getRequest("action=Select;from=cards;id=" + CardNumber.getText());
+            if (result.get("response").equals("False")) {//kártyaszám ellenőrzése
+                JOptionPane.showMessageDialog(rootPane, "Hibás kártyaszám!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                return false;
+            } else {
+                //lejárati dátum ellenőrzése
+                String validDate[] = String.valueOf(result.get("valid")).split("-");
+                int year = Integer.parseInt(validDate[0]), month = Integer.parseInt(validDate[1]), day = Integer.parseInt(validDate[2]);
+                if (new Date(year, month, day).before(new Date())) {
+                    JOptionPane.showMessageDialog(rootPane, "Ez a kártya már lejárt!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+            //könyv példányszámának ellenőrzése
+            result = db.getRequest("action=Select;from=stock;stockNum=" + borrowStockNum.getText());
+            if (result.get("response").equals("False")) {
+                JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            //ki van e már kölcsönözve a könyv?
+            result = db.getRequest("action=Select;from=borrow;stockNum=" + borrowStockNum.getText() + ";state=0");
+            if (result.get("response").equals("True")) {
+                String errorString = String.format("Kártyaszám:%s, Könyv azonosító:%s, Határidő:%s", result.get("cardNum"), result.get("stockNum"), result.get("date"));
+                JOptionPane.showMessageDialog(rootPane, "Ez a könyv ki van kölcsönözve: " + errorString, "Hiba", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    //példány adatok ellenőrzése
+    public boolean checkStock() {
+        if (uploadBookISBN.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg ISBN számot!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (uploadBookStockNum.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    //könyv feltöltés adatainak ellenőrzése
+    public boolean checkUpload() {
+        if (uploadBookTitle.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtad meg a könyv címét!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (uploadBookAuthor.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtad meg az írót!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (uploadBookPublisher.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadót!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (uploadBookYear.getYear() < 0) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadási dátumot!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (fileChooserStringNew.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem választottál ki borító képet!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (categories.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kategóriá(ka)t!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
+    //könyv visszahozás adatok ellenőrzése
+    public boolean borrowBackCheck() {
+        if (borrowStockNumBack.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        dbConnect db = new dbConnect();
+        Map result = db.getRequest("action=Select;from=stock;stockNum=" + borrowStockNumBack.getText());
+        if (result.get("response").equals("False")) {
+            JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
+    //kártya felhasználóhóz társátásá ellenőrzés
+    public boolean cardToUserCheck() {
+        if (cardUser.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg felhasználónevet!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if (cardUserNumber.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártyaszámot!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        dbConnect db = new dbConnect();
+        Map result = db.getRequest("action=Select;from=cards;id=" + cardUserNumber.getText());
+        if (result.get("response").equals("False")) {
+            JOptionPane.showMessageDialog(rootPane, "Nincs ilyen kártyaszám!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    //adatok módosítása ellenőrzése
+    public boolean bookModifyCheck() {
+        if (uploadBookISBN.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg ISBN számot!", "Hiba", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        dbConnect db = new dbConnect();
+        Map result = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
+        try {
+            if (result.get("response").equals("True")) {
+                if (uploadBookTitle.getText().equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtad meg a könyv címét!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if (uploadBookAuthor.getText().equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtad meg az írót!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if (uploadBookPublisher.getText().equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadót!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if (uploadBookYear.getYear() < 0) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadási dátumot!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if (categories.getText().equals("")) {
+                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kategóriá(ka)t!", "Hiba", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Hiba", JOptionPane.ERROR_MESSAGE);
         }
         return true;
     }
@@ -1266,65 +1462,33 @@ public class Gui extends javax.swing.JFrame {
         switchPanel(uploadBook);
     }//GEN-LAST:event_newBookButtonActionPerformed
 
+    //kölcsönzés
     private void UpBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpBorrowActionPerformed
-        if (CardNumber.getText().equals("")) {
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártya számot!", "Hiba", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (borrowStockNum.getText().equals("")) {
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!", "Hiba", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (borrowDate.getDate() == null) {
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál visszahozási dátumot!", "Hiba", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        dbConnect db = new dbConnect();
-        Map result = db.getRequest("action=Select;from=cards;id=" + CardNumber.getText());
-        try {
-            if (result.get("response").equals("False")) {
-                JOptionPane.showMessageDialog(rootPane, "Hibás kártyaszám!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                return;
-            } else {
-                String validDate[] = String.valueOf(result.get("valid")).split("-");
-                int year = Integer.parseInt(validDate[0]), month = Integer.parseInt(validDate[1]), day = Integer.parseInt(validDate[2]);
-                if (new Date(year, month, day).before(new Date())) {
-                    JOptionPane.showMessageDialog(rootPane, "Ez a kártya már lejárt!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
+        if (checkUpBorrow()) {
+            try {
+                SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+                dbConnect db = new dbConnect();
+                Map result = db.getRequest("action=Insert;to=borrow(cardNum,stockNum,date,state);values=" + String.format("VALUES( %s,%s,'%s',0 )", CardNumber.getText(), borrowStockNum.getText(), String.valueOf(sd.format(borrowDate.getDate()))));
+                if (result.get("response").equals("True")) {
+                    JOptionPane.showMessageDialog(rootPane, "Sikeres kölcsönzés!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    CardNumber.setText("kártyaszám");
+                    borrowStockNum.setText("könyvtári szám");
+                    borrowDate.setDate(null);
                 }
-            }
-            result = db.getRequest("action=Select;from=stock;stockNum=" + borrowStockNum.getText());
-            if (result.get("response").equals("False")) {
-                JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            result = db.getRequest("action=Select;from=borrow;stockNum=" + borrowStockNum.getText() + ";state=0");
-            if (result.get("response").equals("True")) {
-                String errorString = String.format("Kártyaszám:%s, Könyv azonosító:%s, Határidő:%s", result.get("cardNum"), result.get("stockNum"), result.get("date"));
-                JOptionPane.showMessageDialog(rootPane, "Ez a könyv ki van kölcsönözve: " + errorString, "Hiba", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
 
-            result = db.getRequest("action=Insert;to=borrow(cardNum,stockNum,date,state);values=" + String.format("VALUES( %s,%s,'%s',0 )", CardNumber.getText(), borrowStockNum.getText(), String.valueOf(sd.format(borrowDate.getDate()))));
-            if (result.get("response").equals("True")) {
-                JOptionPane.showMessageDialog(rootPane, "Sikeres kölcsönzés!", "Info", JOptionPane.INFORMATION_MESSAGE);
-                CardNumber.setText("kártyaszám");
-                borrowStockNum.setText("könyvtári szám");
-                borrowDate.setDate(null);
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Hiba", JOptionPane.ERROR_MESSAGE);
             }
-
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Hiba", JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_UpBorrowActionPerformed
 
     private void fileChooserButtonNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileChooserButtonNewActionPerformed
+        //könyv borító képének kiválasztása
         chooseImage = new JFileChooser();
         chooseImage.setMultiSelectionEnabled(false);
         chooseImage.setCurrentDirectory(new File("C:\\tmp"));
+        //csak képeket fogad el
         chooseImage.setAcceptAllFileFilterUsed(false);
         chooseImage.addChoosableFileFilter(new FileNameExtensionFilter("Image Files (.png, .jpg, .tif)", "jpg", "png", "tif"));
         int retVal = chooseImage.showOpenDialog(rootPane);
@@ -1335,164 +1499,133 @@ public class Gui extends javax.swing.JFrame {
 
     }//GEN-LAST:event_fileChooserButtonNewActionPerformed
 
+    //könyv feltöltése
     private void uploadBookSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadBookSubmitActionPerformed
-        if (uploadBookISBN.getText().equals("")) {
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg ISBN számot!", "Hiba", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (uploadBookStockNum.getText().equals("")) {
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!", "Hiba", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        dbConnect db = new dbConnect();
-        Map result = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
-        try {
-            if (result.get("response").equals("True")) {
-                Map bookId = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
-                if (bookId.get("response").equals("True")) {
-                    result = db.getRequest("action=Insert;to=stock(bookId,stockNum);values=" + String.format("VALUES(%s,%s)", bookId.get("id"), uploadBookStockNum.getText()));
-                }
+        if (checkStock()) {
+            dbConnect db = new dbConnect();
+            Map result = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
+            try {
                 if (result.get("response").equals("True")) {
-                    JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!", "Info", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(rootPane, "Sikertelen könyv feltötltés!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                if (uploadBookTitle.getText().equals("")) {
-                    JOptionPane.showMessageDialog(rootPane, "Nem adtad meg a könyv címét!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (uploadBookAuthor.getText().equals("")) {
-                    JOptionPane.showMessageDialog(rootPane, "Nem adtad meg az írót!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (uploadBookPublisher.getText().equals("")) {
-                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadót!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (uploadBookYear.getYear() < 0) {
-                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadási dátumot!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (fileChooserStringNew.getText().equals("")) {
-                    JOptionPane.showMessageDialog(rootPane, "Nem választottál ki borító képet!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (categories.getText().equals("")) {
-                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kategóriá(ka)t!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                Map authorId = db.getRequest("action=Select;from=author;name=" + uploadBookAuthor.getText());
-                if (authorId.get("response").equals("True")) {
-                    result = db.getRequest("action=Insert;img=" + fileChooserStringNew.getText() + ";to=books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL);values=" + String.format("VALUES( %s, '%s', %s, '%s', '%s', blank )", uploadBookISBN.getText(), uploadBookTitle.getText(), authorId.get("id"), uploadBookYear.getYear(), uploadBookPublisher.getText()));
+                    Map bookId = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
+                    if (bookId.get("response").equals("True")) {
+                        result = db.getRequest("action=Insert;to=stock(bookId,stockNum);values=" + String.format("VALUES(%s,%s)", bookId.get("id"), uploadBookStockNum.getText()));
+                    }
                     if (result.get("response").equals("True")) {
-                        Map bookId = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
-                        if (bookId.get("response").equals("True")) {
-                            result = db.getRequest("action=Insert;to=stock(bookId,stockNum);values=" + String.format("VALUES(%s,%s)", bookId.get("id"), uploadBookStockNum.getText()));
-                            if (result.get("response").equals("True")) {
-                                JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!", "Info", JOptionPane.INFORMATION_MESSAGE);
-                            }
-                        }
+                        JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Sikertelen könyv feltötltés!", "Hiba", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    String birthDate = JOptionPane.showInputDialog(rootPane, "Kérlek add meg az író születési dátumát", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    result = db.getRequest("action=Insert;to=author(name,birthDate);values=" + String.format("VALUES('%s','%s')", uploadBookAuthor.getText(), birthDate));
-                    if (result.get("response").equals("True")) {
-                        authorId = db.getRequest("action=Select;from=author;name=" + uploadBookAuthor.getText());
-                        if (authorId.get("response").equals("True")) {
+                    if (checkUpload()) {
+
+                        Map authorId = db.getRequest("action=Select;from=author;name=" + uploadBookAuthor.getText());
+                        if (authorId.get("response").equals("True")) {//van e már ennek íz írónak feltöltve könyve?
                             result = db.getRequest("action=Insert;img=" + fileChooserStringNew.getText() + ";to=books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL);values=" + String.format("VALUES( %s, '%s', %s, '%s', '%s', blank )", uploadBookISBN.getText(), uploadBookTitle.getText(), authorId.get("id"), uploadBookYear.getYear(), uploadBookPublisher.getText()));
-                            if (result.get("response").equals("True")) {
+                            if (result.get("response").equals("True")) {//könyv feltöltése
                                 Map bookId = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
-                                if (bookId.get("response").equals("True")) {
+                                if (bookId.get("response").equals("True")) {//könyv id kiválasztása
                                     result = db.getRequest("action=Insert;to=stock(bookId,stockNum);values=" + String.format("VALUES(%s,%s)", bookId.get("id"), uploadBookStockNum.getText()));
-                                    if (result.get("response").equals("True")) {
+                                    if (result.get("response").equals("True")) {//példány 
                                         JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!", "Info", JOptionPane.INFORMATION_MESSAGE);
                                     }
+                                }
+                            }
+                        } else {
+                            String birthDate = JOptionPane.showInputDialog(rootPane, "Kérlek add meg az író születési dátumát", "Info", JOptionPane.INFORMATION_MESSAGE);//író adatainak megadása
+                            result = db.getRequest("action=Insert;to=author(name,birthDate);values=" + String.format("VALUES('%s','%s')", uploadBookAuthor.getText(), birthDate));
+                            if (result.get("response").equals("True")) {
+                                authorId = db.getRequest("action=Select;from=author;name=" + uploadBookAuthor.getText());
+                                if (authorId.get("response").equals("True")) {//író id kiválasztása
+                                    result = db.getRequest("action=Insert;img=" + fileChooserStringNew.getText() + ";to=books(ISBN,BookTitle,AuthorId,YearOfPublication,Publisher,ImageUrlL);values=" + String.format("VALUES( %s, '%s', %s, '%s', '%s', blank )", uploadBookISBN.getText(), uploadBookTitle.getText(), authorId.get("id"), uploadBookYear.getYear(), uploadBookPublisher.getText()));
+                                    if (result.get("response").equals("True")) {//könyv feltöltése
+                                        Map bookId = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
+                                        if (bookId.get("response").equals("True")) {//könyv id kiválasztása
+                                            result = db.getRequest("action=Insert;to=stock(bookId,stockNum);values=" + String.format("VALUES(%s,%s)", bookId.get("id"), uploadBookStockNum.getText()));
+                                            if (result.get("response").equals("True")) {//példány 
+                                                JOptionPane.showMessageDialog(rootPane, "Sikeres könyv feltötltés!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        //kategória feltöltése
+                        Map bookId = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
+                        if (bookId.get("response").equals("True")) {
+                            String categoryupload[] = categories.getText().split(";");
+                            for (int i = 0; i < categoryupload.length; i++) {
+                                if (!categoryupload[i].equals("")) {
+                                    String sql = ("action=Insert;to=categoryconn(bookId,categoryId);values=" + String.format("VALUES(%s, (Select category_id from categories where category_name like '%s' ) )", bookId.get("id"), categoryupload[i]));
+                                    result = db.getRequest(sql);
                                 }
                             }
                         }
                     }
                 }
-                Map bookId = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
-                if (bookId.get("response").equals("True")) {
-                    String categoryupload[] = categories.getText().split(";");
-                    for (int i = 0; i < categoryupload.length; i++) {
-                        if (!categoryupload[i].equals("")) {
-                            String sql = ("action=Insert;to=categoryconn(bookId,categoryId);values=" + String.format("VALUES(%s, (Select category_id from categories where category_name like '%s' ) )", bookId.get("id"), categoryupload[i]));
-                            result = db.getRequest(sql);
-                        }
-                    }
-                }
 
+                uploadBookYear.setYear(1);
+                uploadBookAuthor.setText("");
+                uploadBookTitle.setText("");
+                uploadBookPublisher.setText("");
+                uploadBookISBN.setText("");
+                uploadBookStockNum.setText("");
+                fileChooserStringNew.setText("");
+                categories.setText("");
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+                JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Hiba", JOptionPane.ERROR_MESSAGE);
             }
-            uploadBookYear.setYear(1);
-            uploadBookAuthor.setText("");
-            uploadBookTitle.setText("");
-            uploadBookPublisher.setText("");
-            uploadBookISBN.setText("");
-            uploadBookStockNum.setText("");
-            fileChooserStringNew.setText("");
-            categories.setText("");
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Hiba", JOptionPane.ERROR_MESSAGE);
+
         }
-
-
     }//GEN-LAST:event_uploadBookSubmitActionPerformed
 
+    //könyv visszahozása
     private void borrowBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_borrowBackButtonActionPerformed
-        if (borrowStockNumBack.getText().equals("")) {
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg könyv azonosítót!", "Hiba", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        dbConnect db = new dbConnect();
-        Map result = db.getRequest("action=Select;from=stock;stockNum=" + borrowStockNumBack.getText());
-        if (result.get("response").equals("False")) {
-            JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!", "Hiba", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
-        result = db.getRequest("action=Update;to=borrow;set=state:1,returnDate:'" + sd.format(System.currentTimeMillis()) + "';stockNum=" + borrowStockNumBack.getText() + ";state=0");
-        if (result.get("response").equals("True")) {
-            JOptionPane.showMessageDialog(rootPane, "Sikeres könyv leadás!", "Info", JOptionPane.INFORMATION_MESSAGE);
-            borrowStockNumBack.setText("");
+        if (borrowBackCheck()) {
+            dbConnect db = new dbConnect();
+            SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
+            Map result = db.getRequest("action=Update;to=borrow;set=state:1,returnDate:'" + sd.format(System.currentTimeMillis()) + "';stockNum=" + borrowStockNumBack.getText() + ";state=0");
+            if (result.get("response").equals("True")) {
+                JOptionPane.showMessageDialog(rootPane, "Sikeres könyv leadás!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                borrowStockNumBack.setText("");
+            }
         }
     }//GEN-LAST:event_borrowBackButtonActionPerformed
 
+    //oldalváltás gomb
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         switchPanel(cardManager);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    //kártya felhasználóhóz társátása 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (cardUser.getText().equals("")) {
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg felhasználónevet!", "Hiba", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (cardUserNumber.getText().equals("")) {
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártyaszámot!", "Hiba", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        if (cardToUserCheck()) {
+            dbConnect db = new dbConnect();
+            //felhasználó kiválasztása
+            int userId = 0;
+            Map resultId = db.getRequest("action=Select;from=users;username='" + cardUser.getText() + "'");
+            if (resultId.get("response").equals("True")) {
+                userId = Integer.parseInt(String.valueOf(resultId.get("id")));
 
-        dbConnect db = new dbConnect();
-        Map result = db.getRequest("action=Select;from=cards;id=" + cardUserNumber.getText());
-        if (result.get("response").equals("False")) {
-            JOptionPane.showMessageDialog(rootPane, "Nincs ilyen kártyaszám!", "Hiba", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        int userId = 0;
-        Map resultId = db.getRequest("action=Select;from=users;username='" + cardUser.getText() + "'");
-        if (resultId.get("response").equals("True")) {
-            userId = Integer.parseInt(String.valueOf(resultId.get("id")));
-
-            result = db.getRequest("action=Select;from=usercards;userId=" + userId);
-            if (result.get("response").equals("True")) {
-                int update = JOptionPane.showConfirmDialog(rootPane, "Ehez a felhasználóhoz már van kártya társítva, kívánja folytatni a folyamatot?", "Info", JOptionPane.YES_NO_OPTION);
-                if (update == JOptionPane.NO_OPTION) {
-                    cardUser.setText("");
-                    cardUserNumber.setText("");
-                } else if (update == JOptionPane.YES_OPTION) {
-                    result = db.getRequest("action=Update;to=usercards;set=cardId:" + cardUserNumber.getText() + ";userId=" + userId);
+                //van e kártyája az adott felhasználónak
+                Map result = db.getRequest("action=Select;from=usercards;userId=" + userId);
+                if (result.get("response").equals("True")) {
+                    int update = JOptionPane.showConfirmDialog(rootPane, "Ehez a felhasználóhoz már van kártya társítva, kívánja folytatni a folyamatot?", "Info", JOptionPane.YES_NO_OPTION);
+                    if (update == JOptionPane.NO_OPTION) {
+                        cardUser.setText("");
+                        cardUserNumber.setText("");
+                    } else if (update == JOptionPane.YES_OPTION) {
+                        //kártya társitása
+                        result = db.getRequest("action=Update;to=usercards;set=cardId:" + cardUserNumber.getText() + ";userId=" + userId);
+                        if (result.get("response").equals("True")) {
+                            JOptionPane.showMessageDialog(rootPane, "Sikeres kártya társítása!", "Info", JOptionPane.INFORMATION_MESSAGE);
+                            cardUser.setText("");
+                            cardUserNumber.setText("");
+                        }
+                    }
+                } else {
+                    //kártya társitása
+                    result = db.getRequest("action=Insert;to=usercards(userId,cardId);values=" + String.format("VALUES(%s,%s)", userId, cardUserNumber.getText()));
                     if (result.get("response").equals("True")) {
                         JOptionPane.showMessageDialog(rootPane, "Sikeres kártya társítása!", "Info", JOptionPane.INFORMATION_MESSAGE);
                         cardUser.setText("");
@@ -1500,17 +1633,9 @@ public class Gui extends javax.swing.JFrame {
                     }
                 }
             } else {
-                result = db.getRequest("action=Insert;to=usercards(userId,cardId);values=" + String.format("VALUES(%s,%s)", userId, cardUserNumber.getText()));
-                if (result.get("response").equals("True")) {
-                    JOptionPane.showMessageDialog(rootPane, "Sikeres kártya társítása!", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    cardUser.setText("");
-                    cardUserNumber.setText("");
-                }
+                JOptionPane.showMessageDialog(rootPane, "Nincs ilyen nevű felhasználó!", "Hiba", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Nincs ilyen nevű felhasználó!", "Hiba", JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -1587,6 +1712,7 @@ public class Gui extends javax.swing.JFrame {
         updateCurrentPermission();
     }//GEN-LAST:event_adminRemoveUserActionPerformed
 
+    //admin hozzáadása
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         dbConnect db = new dbConnect();
         Map result = db.getRequest("action=Select;from=users;username='" + adminAddUser.getSelectedItem() + "'");
@@ -1600,6 +1726,7 @@ public class Gui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    //admin módosítása/törlése
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         dbConnect db = new dbConnect();
         Map result = db.getRequest("action=Select;from=users;username='" + adminRemoveUser.getSelectedItem() + "'");
@@ -1619,17 +1746,21 @@ public class Gui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton8ActionPerformed
 
+    //könyv törlése
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        //üres mező ellenőrzése
         if (uploadBookStockNum.getText().equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg raktári számot!", "Hiba", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        //példány szám ellenőrzése
         dbConnect db = new dbConnect();
         Map result = db.getRequest("action=Select;from=stock;stockNum=" + uploadBookStockNum.getText());
         if (result.get("response").equals("False")) {
             JOptionPane.showMessageDialog(rootPane, "Nem létezik ez a könyvtári szám!", "Hiba", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        //törlés
         result = db.getRequest("action=Delete;from=stock;stockNum=" + uploadBookStockNum.getText());
         if (result.get("response").equals("True")) {
             JOptionPane.showMessageDialog(rootPane, "Sikeres törlés!", "Info", JOptionPane.INFORMATION_MESSAGE);
@@ -1649,7 +1780,9 @@ public class Gui extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(rootPane, message, "Info", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jButton10ActionPerformed
 
+    //kártya lejárati dátum hosszabítása
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        //üres mezők ellenőrzése
         if (cardValidNumber.getText().equals("")) {
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kártyaszámot!", "Hiba", JOptionPane.ERROR_MESSAGE);
             return;
@@ -1658,6 +1791,7 @@ public class Gui extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Nem adtál meg dátumot!", "Hiba", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        //létezik e a kártya?
         dbConnect db = new dbConnect();
         Map result = db.getRequest("action=Select;from=cards;id='" + cardValidNumber.getText() + "'");
         if (result.get("response").equals("True")) {
@@ -1678,6 +1812,7 @@ public class Gui extends javax.swing.JFrame {
         new cards().setVisible(true);
     }//GEN-LAST:event_jButton12ActionPerformed
 
+    //kategória hozzáadása
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
         if (categories.getText().contains(String.valueOf(newCategories.getSelectedItem()))) {
             JOptionPane.showMessageDialog(rootPane, "Ehez a kategóriához már hozzá van adva!", "Hiba", JOptionPane.ERROR_MESSAGE);
@@ -1686,6 +1821,7 @@ public class Gui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton13ActionPerformed
 
+    //kategória törlése
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
         if (categories.getText().contains(String.valueOf(newCategories.getSelectedItem()))) {
 
@@ -1695,14 +1831,17 @@ public class Gui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton14ActionPerformed
 
+    //új kategória feltöltése
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
         dbConnect db = new dbConnect();
         String newCat = JOptionPane.showInputDialog(rootPane, "Add meg az új kategóriát", "Info", JOptionPane.INFORMATION_MESSAGE);
         System.err.println(newCat);
+        //létezik e a kategória?
         Map result = db.getRequest("action=Select;from=categories;category_name=" + newCat);
         if (result.get("response").equals("True")) {
             JOptionPane.showMessageDialog(rootPane, "Ez a kategória már létezik", "Hiba", JOptionPane.ERROR_MESSAGE);
         } else {
+            //feltöltés
             result = db.getRequest("action=Insert;to=categories(category_name);values=VALUES('" + newCat + "')");
             if (result.get("response").equals("True")) {
                 JOptionPane.showMessageDialog(rootPane, "Sikeres feltöltés!", "Info", JOptionPane.INFORMATION_MESSAGE);
@@ -1711,6 +1850,7 @@ public class Gui extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton15ActionPerformed
 
+    //kölcsönzések listája
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
         new borrows().setVisible(true);
     }//GEN-LAST:event_jButton16ActionPerformed
@@ -1719,49 +1859,26 @@ public class Gui extends javax.swing.JFrame {
         updateBookISBN();
     }//GEN-LAST:event_uploadBookISBNFocusLost
 
+    //könyv adatok módosítása
     private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
-        if (uploadBookISBN.getText().equals("")) {
-            JOptionPane.showMessageDialog(rootPane, "Nem adtál meg ISBN számot!", "Hiba", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        dbConnect db = new dbConnect();
-        Map result = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
         try {
-            if (result.get("response").equals("True")) {
-                if (uploadBookTitle.getText().equals("")) {
-                    JOptionPane.showMessageDialog(rootPane, "Nem adtad meg a könyv címét!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (uploadBookAuthor.getText().equals("")) {
-                    JOptionPane.showMessageDialog(rootPane, "Nem adtad meg az írót!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (uploadBookPublisher.getText().equals("")) {
-                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadót!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (uploadBookYear.getYear() < 0) {
-                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kiadási dátumot!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (categories.getText().equals("")) {
-                    JOptionPane.showMessageDialog(rootPane, "Nem adtál meg kategóriá(ka)t!", "Hiba", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+            if (bookModifyCheck()) {
+                dbConnect db = new dbConnect();
+                //létezik e az író
                 Map authorId = db.getRequest("action=Select;from=author;name=" + uploadBookAuthor.getText());
                 if (authorId.get("response").equals("True")) {
-                    result = db.getRequest("action=Update;to=books;set=BookTitle:'"+uploadBookTitle.getText()+"',AuthorId:"+authorId.get("id")+",YearOfPublication:'"+uploadBookYear.getYear()+"',Publisher:'"+uploadBookPublisher.getText()+"';ISBN="+uploadBookISBN.getText());  
+                    Map result = db.getRequest("action=Update;to=books;set=BookTitle:'" + uploadBookTitle.getText() + "',AuthorId:" + authorId.get("id") + ",YearOfPublication:'" + uploadBookYear.getYear() + "',Publisher:'" + uploadBookPublisher.getText() + "';ISBN=" + uploadBookISBN.getText());
                     if (result.get("response").equals("True")) {
                         JOptionPane.showMessageDialog(rootPane, "Sikeres könyvadatok módosítása!", "Info", JOptionPane.INFORMATION_MESSAGE);
                     }
-                      
+
                 } else {
                     String birthDate = JOptionPane.showInputDialog(rootPane, "Kérlek add meg az író születési dátumát", "Info", JOptionPane.INFORMATION_MESSAGE);
-                    result = db.getRequest("action=Insert;to=author(name,birthDate);values=" + String.format("VALUES('%s','%s')", uploadBookAuthor.getText(), birthDate));
+                    Map result = db.getRequest("action=Insert;to=author(name,birthDate);values=" + String.format("VALUES('%s','%s')", uploadBookAuthor.getText(), birthDate));
                     if (result.get("response").equals("True")) {
                         authorId = db.getRequest("action=Select;from=author;name=" + uploadBookAuthor.getText());
                         if (authorId.get("response").equals("True")) {
-                            result = db.getRequest("action=Update;to=books;set=BookTitle:'"+uploadBookTitle.getText()+"',AuthorId:"+authorId.get("id")+",YearOfPublication:'"+uploadBookYear.getYear()+"',Publisher:'"+uploadBookPublisher.getText()+"';ISBN="+uploadBookISBN.getText());  
+                            result = db.getRequest("action=Update;to=books;set=BookTitle:'" + uploadBookTitle.getText() + "',AuthorId:" + authorId.get("id") + ",YearOfPublication:'" + uploadBookYear.getYear() + "',Publisher:'" + uploadBookPublisher.getText() + "';ISBN=" + uploadBookISBN.getText());
                             if (result.get("response").equals("True")) {
                                 JOptionPane.showMessageDialog(rootPane, "Sikeres könyvadatok módosítása!", "Info", JOptionPane.INFORMATION_MESSAGE);
                             }
@@ -1770,7 +1887,7 @@ public class Gui extends javax.swing.JFrame {
                 }
                 Map bookId = db.getRequest("action=Select;from=books;ISBN=" + uploadBookISBN.getText());
                 if (bookId.get("response").equals("True")) {
-                    db.getRequest("action=Delete;from=categoryconn;bookId="+bookId.get("id"));
+                    db.getRequest("action=Delete;from=categoryconn;bookId=" + bookId.get("id"));
                     String categoryupload[] = categories.getText().split(";");
                     for (int i = 0; i < categoryupload.length; i++) {
                         if (!categoryupload[i].equals("")) {
@@ -1793,15 +1910,6 @@ public class Gui extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Hiba", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton17ActionPerformed
-
-    public static PdfPCell createBarcode(PdfWriter writer, String code) throws DocumentException, IOException {
-        BarcodeEAN barcode = new BarcodeEAN();
-        barcode.setCodeType(Barcode.EAN8);
-        barcode.setCode(code);
-        PdfPCell cell = new PdfPCell(barcode.createImageWithBarcode(writer.getDirectContent(), BaseColor.BLACK, BaseColor.GRAY), true);
-        cell.setPadding(10);
-        return cell;
-    }
 
     /**
      * @param args the command line arguments

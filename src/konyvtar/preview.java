@@ -24,34 +24,35 @@ import org.apache.pdfbox.rendering.PDFRenderer;
  *
  * @author Gergő
  */
-public class preview  {
-    private static String cardName,cardAddress;
+public class preview {
+
+    private static String cardName, cardAddress;
     private static BufferedImage image;
-    
-    private static BufferedImage loadPreview(){
-        try{
+
+    private static BufferedImage loadPreview() {
+        try {
             //pdf file
             Document writePdf = new Document();
-            FileOutputStream fout=new FileOutputStream("temp.pdf");
+            FileOutputStream fout = new FileOutputStream("temp.pdf");
             PdfWriter writer = PdfWriter.getInstance(writePdf, fout);
             writePdf.open();
-            
+
             //tábla formázás
             PdfPTable table = new PdfPTable(1);
             PdfPCell cell = new PdfPCell();
-            
+
             //olvasójegy felirat
             Paragraph olvasojegy = new Paragraph("Olvasójegy");
             olvasojegy.setFont(new Font(Font.FontFamily.UNDEFINED, 20));
             olvasojegy.setSpacingAfter(5f);
             olvasojegy.setAlignment(Element.ALIGN_CENTER);
             cell.addElement(olvasojegy);
-            
+
             //adatok
             Paragraph adatok = new Paragraph(String.format("Név: %s\nLakcím: %s\n", cardName, cardAddress));
             adatok.setSpacingAfter(10f);
             cell.addElement(adatok);
-            
+
             //vonalkód
             BarcodeEAN barcode = new BarcodeEAN();
             barcode.setCodeType(Barcode.EAN8);
@@ -65,26 +66,26 @@ public class preview  {
             img.setAlignment(Element.ALIGN_CENTER);
             cell.addElement(img);
             cell.setPadding(50);
-            
+
             //fájlba írás
             table.addCell(cell);
             writePdf.add(table);
             writePdf.close();
             writer.close();
             fout.close();
-            
+
             //kép létrehozása
             PDDocument document = PDDocument.load(new File("temp.pdf"));
             PDFRenderer pdfRenderer = new PDFRenderer(document);
-            BufferedImage bi= pdfRenderer.renderImage(0,1.5f);
+            BufferedImage bi = pdfRenderer.renderImage(0, 1.5f);
             document.close();
-            
+
             return bi;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
-    }                 
+    }
 
     /**
      * @param args the command line arguments
@@ -93,9 +94,9 @@ public class preview  {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                cardName=args[0];
-                cardAddress=args[1];
-                image=loadPreview();
+                cardName = args[0];
+                cardAddress = args[1];
+                image = loadPreview();
                 JFrame frame = buildFrame();
                 JPanel pane = new JPanel() {
                     @Override
@@ -105,12 +106,11 @@ public class preview  {
                     }
                 };
 
-
                 frame.add(pane);
             }
         });
     }
-    
+
     private static JFrame buildFrame() {
         JFrame frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -119,5 +119,4 @@ public class preview  {
         return frame;
     }
 
-                
 }

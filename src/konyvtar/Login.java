@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package konyvtar;
 
 import java.math.BigInteger;
@@ -16,53 +11,61 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Login
-     */
     public Login() {
         initComponents();
     }
 
-    private void onLoggedIn(){
-        if(user.getText().equals("")){
-            JOptionPane.showMessageDialog(rootPane, "Nem írtál be felhasználó nevet!","Error",JOptionPane.ERROR_MESSAGE);
+    /*
+    Bejelentkezés ellenőrzése
+     */
+    private void onLoggedIn() {
+        //felhasználónév nem lehet üres
+        if (user.getText().equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem írtál be felhasználó nevet!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(String.valueOf(pass.getPassword()).equals("")){
-            JOptionPane.showMessageDialog(rootPane, "Nem írtál be jelszót!","Error",JOptionPane.ERROR_MESSAGE);
+        //jelszó nem lehet üres
+        if (String.valueOf(pass.getPassword()).equals("")) {
+            JOptionPane.showMessageDialog(rootPane, "Nem írtál be jelszót!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         dbConnect sql = new dbConnect();
-        String myHash="";
-        try{
+        //berírt jelszó titkosítása
+        String myHash = "";
+        try {
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(String.valueOf(pass.getPassword()).getBytes());
             byte[] digest = md.digest();
-            BigInteger bigInt = new BigInteger(1,digest);
+            BigInteger bigInt = new BigInteger(1, digest);
             myHash = bigInt.toString(16);
-            for (int i = myHash.length(); i < 32 ; i++) {
-                myHash="0"+myHash;
+            //bigInt konvertáláskor elvesznek a hash elején álló 0-ák
+            for (int i = myHash.length(); i < 32; i++) {
+                myHash = "0" + myHash;
             }
-        }catch(Exception e){System.err.println(e.getMessage());}
-        Map result = sql.getRequest("action=Select;username="+user.getText()+";password="+myHash);
-        try{
-            if(result.get("response").equals("True")){
-                Main.GuiWindow.returnLogin(Integer.parseInt( String.valueOf(result.get("id")) ), Integer.parseInt(String.valueOf(result.get("permission"))) );
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        //felhasználó lekérdezése
+        Map result = sql.getRequest("action=Select;username=" + user.getText() + ";password=" + myHash);
+        try {
+            if (result.get("response").equals("True")) {//létezik a felhasználó
+                Main.GuiWindow.returnLogin(Integer.parseInt(String.valueOf(result.get("id"))), Integer.parseInt(String.valueOf(result.get("permission"))));
                 user.setText("");
                 pass.setText("");
                 this.dispose();
                 return;
-            }else if(result.containsKey("user") && result.get("user").equals("exists")){
-                JOptionPane.showMessageDialog(rootPane, "Nincs megfelelő jogosultságod!","Error",JOptionPane.ERROR_MESSAGE);
+            } else if (result.containsKey("user") && result.get("user").equals("exists")) {// létezik a felhasználó de nem admin
+                JOptionPane.showMessageDialog(rootPane, "Nincs megfelelő jogosultságod!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            JOptionPane.showMessageDialog(rootPane, "Hibás bejelentkezés!","Error",JOptionPane.ERROR_MESSAGE);
-        }catch(Exception e){
+            //nem létezik a feléhasználó
+            JOptionPane.showMessageDialog(rootPane, "Hibás bejelentkezés!", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
             System.err.println(e);
-            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(rootPane, "SQL error Kérlek próbáld újra késöbb!", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-  
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -181,6 +184,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_submitActionPerformed
 
     private void settingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsActionPerformed
+        //beállítások megjelenítése
         new settings().setVisible(true);
     }//GEN-LAST:event_settingsActionPerformed
 

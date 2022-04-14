@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package konyvtar;
 
 import java.awt.Color;
@@ -17,12 +12,9 @@ import java.io.FileWriter;
  */
 public class settings extends javax.swing.JFrame {
 
-    /**
-     * Creates new form settings
-     */
     public settings() {
         initComponents();
-        this.getContentPane().setBackground(new Color(218,180,127));
+        this.getContentPane().setBackground(new Color(218, 180, 127));
         initSettings();
     }
 
@@ -105,42 +97,50 @@ public class settings extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    //alapértelmezett beállítások
 
-    private void initSettings(){
-         try{
+    private void initSettings() {
+        try {
             File tempFile = new File("conf.config");
             boolean exists = tempFile.exists();
-            if(!exists){
+            if (!exists) {
                 tempFile.createNewFile();
-                FileWriter fw=new FileWriter("conf.config");
+                FileWriter fw = new FileWriter("conf.config");
                 fw.write("address = localhost\n");
                 fw.write("url = konyvtar");
                 fw.close();
             }
-            BufferedReader conf=new BufferedReader(new FileReader("conf.config"));
+            BufferedReader conf = new BufferedReader(new FileReader("conf.config"));
             String sor;
-            if ((sor=conf.readLine())!=null )
+            if ((sor = conf.readLine()) != null) {
                 address.setText(sor.split("=")[1].trim());
-            if ((sor=conf.readLine())!=null )
+            }
+            if ((sor = conf.readLine()) != null) {
                 url.setText(sor.split("=")[1].trim());
-            
+            }
+
             conf.close();
-        }catch(Exception e){ System.err.println(e); }
+        } catch (Exception e) {
+            System.err.println(e);
+        }
     }
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try{
+        try {
+            // a felhasználó által beírt adatok mentése
             File tempFile = new File("conf.config");
             boolean exists = tempFile.exists();
-            if(!exists){
+            if (!exists) {
                 tempFile.createNewFile();
             }
-            FileWriter fw=new FileWriter("conf.config");
-            fw.write("address = "+address.getText()+"\n");
-            fw.write("url = "+url.getText());
+            FileWriter fw = new FileWriter("conf.config");
+            fw.write("address = " + address.getText() + "\n");
+            fw.write("url = " + url.getText());
             fw.close();
-            
-        }catch(Exception e){ System.err.println(e); }
+
+        } catch (Exception e) {
+            System.err.println(e);
+        }
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 

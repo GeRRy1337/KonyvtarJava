@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package konyvtar;
 
 import java.awt.Color;
@@ -20,11 +15,12 @@ public class borrows extends javax.swing.JFrame {
      */
     public borrows() {
         initComponents();
-        this.getContentPane().setBackground(new Color(218,180,127));
+        this.getContentPane().setBackground(new Color(218, 180, 127));
         loadBorrows();
     }
-    
-     private void loadBorrows() {
+
+    //kölcsönzések lekérdezése
+    private void loadBorrows() {
         dbConnect db = new dbConnect();
         Map result = db.getRequest("action=borrowList");
         if (result.get("response").equals("True")) {
@@ -40,6 +36,7 @@ public class borrows extends javax.swing.JFrame {
         }
     }
 
+    //táblázat kiürítése
     private void removeBorrows() {
         DefaultTableModel model = (DefaultTableModel) borrowTable.getModel();
         int num = model.getRowCount();
@@ -119,18 +116,19 @@ public class borrows extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //keresés
     private void searchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchKeyReleased
         DefaultTableModel model = (DefaultTableModel) borrowTable.getModel();
         int num = model.getRowCount();
         if (!search.getText().equals("")) {
-            borrowTable.removeRowSelectionInterval(0,num-1);
+            borrowTable.removeRowSelectionInterval(0, num - 1);
             for (int i = 0; i < num; i++) {
                 if (String.valueOf(model.getValueAt(i, 1)).contains(search.getText())) {
-                    borrowTable.addRowSelectionInterval(i,i);
+                    borrowTable.addRowSelectionInterval(i, i);
                 }
             }
-        }else{
-            borrowTable.removeRowSelectionInterval(0,num-1);
+        } else {
+            borrowTable.removeRowSelectionInterval(0, num - 1);
         }
     }//GEN-LAST:event_searchKeyReleased
 

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package konyvtar;
 
 import java.awt.Color;
@@ -19,10 +15,11 @@ public class cards extends javax.swing.JFrame {
      */
     public cards() {
         initComponents();
-        this.getContentPane().setBackground(new Color(218,180,127));
+        this.getContentPane().setBackground(new Color(218, 180, 127));
         loadCards();
     }
 
+    //kártyák lekérdezése
     private void loadCards() {
         dbConnect db = new dbConnect();
         Map result = db.getRequest("action=cardList");
@@ -39,6 +36,7 @@ public class cards extends javax.swing.JFrame {
         }
     }
 
+    //kártyák kiürítése
     private void removeCards() {
         DefaultTableModel model = (DefaultTableModel) cardsTable.getModel();
         int num = model.getRowCount();
@@ -126,18 +124,19 @@ public class cards extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //keresés
     private void searchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchKeyReleased
         DefaultTableModel model = (DefaultTableModel) cardsTable.getModel();
         int num = model.getRowCount();
         if (!search.getText().equals("")) {
-            cardsTable.removeRowSelectionInterval(0,num-1);
+            cardsTable.removeRowSelectionInterval(0, num - 1);
             for (int i = 0; i < num; i++) {
                 if (String.valueOf(model.getValueAt(i, 2)).contains(search.getText())) {
-                   cardsTable.addRowSelectionInterval(i,i);
+                    cardsTable.addRowSelectionInterval(i, i);
                 }
             }
-        }else{
-            cardsTable.removeRowSelectionInterval(0,num-1);
+        } else {
+            cardsTable.removeRowSelectionInterval(0, num - 1);
         }
     }//GEN-LAST:event_searchKeyReleased
 
