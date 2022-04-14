@@ -530,8 +530,6 @@ public class Gui extends javax.swing.JFrame {
 
         jLabel15.setText("Könyv Azonosító:");
 
-        borrowStockNumBack.setText("könyvtári szám");
-
         borrowBackButton.setText("Visszahozás");
         borrowBackButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1449,7 +1447,7 @@ public class Gui extends javax.swing.JFrame {
             return;
         }
         dbConnect db = new dbConnect();
-        Map result = db.getRequest("action=Select;from=stock;stockNum=" + borrowStockNum.getText());
+        Map result = db.getRequest("action=Select;from=stock;stockNum=" + borrowStockNumBack.getText());
         if (result.get("response").equals("False")) {
             JOptionPane.showMessageDialog(rootPane, "Hibás könyv azonosító!", "Hiba", JOptionPane.ERROR_MESSAGE);
             return;

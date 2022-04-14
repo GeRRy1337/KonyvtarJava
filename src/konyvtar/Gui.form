@@ -399,9 +399,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="borrowStockNumBack">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="k&#xf6;nyvt&#xe1;ri sz&#xe1;m"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="borrowBackButton">
               <Properties>
